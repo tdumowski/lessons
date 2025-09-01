@@ -2,6 +2,7 @@ import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import timelinePlugin from '@fullcalendar/timeline';
 
 document.addEventListener('DOMContentLoaded', function () {
    const calendarEl = document.getElementById('calendar');
@@ -42,6 +43,8 @@ document.addEventListener('DOMContentLoaded', function () {
       const calendar = new Calendar(calendarEl, {
          plugins: [timeGridPlugin],
          initialView: 'timeGridDay',
+         // plugins: [timelinePlugin],
+         // initialView: 'timelineDay',
          validRange: {
             start: startOfWeek,
             end: endOfWeek
