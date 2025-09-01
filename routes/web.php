@@ -21,4 +21,8 @@ Route::get('/chat', function () {
     return view('chat');
 })->name('chat');
 
+Route::get('/calendar', function () {
+    return view('calendar');
+})->name('calendar');
+
 require __DIR__.'/auth.php';

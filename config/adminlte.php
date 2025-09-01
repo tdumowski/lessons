@@ -336,7 +336,12 @@ return [
         [
             'text' => 'Chat',
             'url' => 'chat',
-            'icon' => 'fas fa-fw fa-lock',
+            'icon' => 'fas fa-solid fa-comments',
+        ],
+        [
+            'text' => 'Kalendarz',
+            'url' => 'calendar',
+            'icon' => 'fas fa-regular fa-calendar-week',
         ],
         [
             'text' => 'change_password',

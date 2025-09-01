@@ -1,0 +1,31 @@
+/*@import "@fullcalendar/daygrid/main.css";
+/*@import "@fullcalendar/timegrid/main.css"; /* jeśli używasz timegrid */
+/*@import "@fullcalendar/list/main.css";     /* jeśli używasz list view */
+
+/* Ukryj daty w nagłówkach */
+.fc-col-header-cell .fc-day-number {
+  display: none;
+}
+
+/* Usuń podświetlenie aktualnego dnia */
+.fc-day-today {
+  background-color: transparent !important;
+}
+
+/* Opcjonalnie: usuń cień lub inne efekty */
+.fc-now-indicator {
+  display: none;
+}
+
+/* Białe nazwy dni tygodnia */
+/* Nadpisanie koloru tekstu w nagłówkach dni tygodnia */
+.fc .fc-col-header-cell-cushion {
+  color: white !important;
+}
+
+/* Opcjonalnie: tło nagłówka dla kontrastu */
+.fc-col-header-cell, .fc-timegrid-axis {
+  background-color: #333 !important;
+}
+
+
