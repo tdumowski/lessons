@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'School | START')
+@section('title', 'Tytuł aplikacji | Tytuł widoku')
 
 @section('content')
 

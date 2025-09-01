@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'School | START')
+@section('title', 'Plan lekcji | Chat AI')
 
 @section('content')
 
