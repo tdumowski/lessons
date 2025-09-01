@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (chatTrigger) {
     chatTrigger.addEventListener('click', async () => {
       // Pobranie wartości z inputa
+      document.getElementById('chatAnswer').value = 'Czekam na odpowiedź...';
       const question = document.getElementById('chatQuestion').value;
 
       try {

@@ -37,17 +37,18 @@
          </div>
 
          <div class="row">
+            <div class="col-sm-2">
+               <button type="button" id="btnChatTrigger" class="btn btn-block bg-gradient-primary btn-sm">Wyślij</button>
+            </div>
+         </div>
+         
+         <p></p>
+         <div class="row m-t-20">
             <div class="col-sm-12">
                <div class="form-group">
                   <label>Odpowiedź chata</label>
-                  <textarea class="form-control" rows="3" disabled="" id="chatAnswer"></textarea>
+                  <textarea class="form-control" rows="25" disabled="" id="chatAnswer"></textarea>
                </div>
-            </div>
-         </div>
-
-         <div class="row">
-            <div class="col-sm-2">
-               <button type="button" id="btnChatTrigger" class="btn btn-block bg-gradient-primary btn-sm">Wyślij</button>
             </div>
          </div>
       </div><!--/. container-fluid -->
