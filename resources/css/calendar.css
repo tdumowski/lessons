@@ -28,4 +28,18 @@
   background-color: #333 !important;
 }
 
+/* Zwiększenie wysokości slotów czasowych w widoku timeGrid */
+.fc-timegrid-slot {
+  height: 2.5em !important; /* domyślnie to ok. 1.25em, więc x2 */
+}
+
+/* Opcjonalnie: zwiększenie odstępu między liniami */
+.fc-timegrid-slot-label {
+  line-height: 2.5em !important;
+}
+
+.fc-event-title,
+.fc-event-title-container {
+  white-space: normal !important;
+}
 
