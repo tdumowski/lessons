@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subjects', function (Blueprint $table) {
+        Schema::create('timeslots', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('school_id')->nullable();
-            $table->string('name', 50);
+            $table->time('start', 0)->comment('godzina (HH:mm) początku leksji');
+            $table->time('end', 0)->comment('godzina (HH:mm) końca leksji');
             $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subjects');
+        Schema::dropIfExists('timeslots');
     }
 };

@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
-            $table->text('first_name');
-            $table->text('last_name');
+            $table->unsignedBigInteger('school_id')->nullable();
+            $table->string('first_name', 25);
+            $table->string('last_name', 50);
             $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             
+            $table->foreign('school_id')->references('id')->on('schools');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
         });

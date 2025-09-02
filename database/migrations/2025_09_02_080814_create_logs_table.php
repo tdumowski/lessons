@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subjects', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('school_id')->nullable();
-            $table->string('name', 50);
-            $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');
+            $table->unsignedBigInteger('logitem_id');
+            $table->unsignedBigInteger('item_id');
+            $table->string('operation', 255);
+            $table->tinyInteger('type')->default(0)->comment("0:success / 1:error");
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
 
-            $table->foreign('school_id')->references('id')->on('schools');
+            $table->foreign('logitem_id')->references('id')->on('log_items');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
         });
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subjects');
+        Schema::dropIfExists('logs');
     }
 };
