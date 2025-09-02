@@ -31,7 +31,8 @@
                <!-- text input -->
                <div class="form-group">
                   <label>Pytanie do chata</label>
-                  <input type="text" class="form-control" placeholder="Wpisz swoje pytanie do chata AI" id="chatQuestion">
+                  <textarea class="form-control" rows="10" id="chatQuestion"></textarea>
+                  {{-- <input type="text" class="form-control" placeholder="Wpisz swoje pytanie do chata AI" id="chatQuestion"> --}}
                </div>
             </div>
          </div>

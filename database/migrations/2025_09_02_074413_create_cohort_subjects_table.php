@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('cohort_subjects', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('cohort_id');
-            $table->tinyInteger('lessons_in_week');
+            $table->tinyInteger('amount');
             $table->unsignedBigInteger('subject_id');
             $table->unsignedBigInteger('teacher_id');
             $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');

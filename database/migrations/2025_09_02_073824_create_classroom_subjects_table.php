@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('classroom_subjects', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('classroom_id');
-            $table->unsignedBigInteger('subject_id');
             $table->enum('status', ['ACTIVE', 'INACTIVE'])->default('ACTIVE');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
 
             $table->foreign('classroom_id')->references('id')->on('classrooms');
-            $table->foreign('subject_id')->references('id')->on('subjects');
             $table->foreign('created_by')->references('id')->on('users');
             $table->foreign('updated_by')->references('id')->on('users');
         });
