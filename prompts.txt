@@ -1,0 +1,502 @@
+Zadanie składa się z 4 części: 
+1) OGÓLNY OPIS (zawiera ideę zadania, ogólnie przedstawia kontekst i podstawowe zależności pomiędzy obiektami będącymi przedmiotem reguł itd.)
+2) ZBIORY DANYCH (zawiera szczegółowe informacje nt. obiektów)
+3) REGUŁY (zawiera szczegółowe zasady, według których zadanie powinno zostać wykonane)
+4) OPIS OCZEKIWANEJ ODPOWIEDZI (zawiera informacje dot. formatu, w jakim powinny zostać zwrócone dane, będące rozwiązaniem zadania). 
+Każda z części zaczyna się wyrazem START i kończy wyrazem END.
+
+OGÓLNY OPIS:
+START
+Zadanie polega na wygenerowaniu harmonogramu lekcji dla szkoły.
+
+Szkoła prowadzi lekcje dla uczniów podzielonych na klasy.
+Wykaz klas zawiera zbiór "klasy".
+
+Lekcje z danego przedmiotu prowadzą nauczyciele.
+Wykaz nauczycieli zawiera zbiór "nauczyciele".
+
+Lekcje odbywają się w dniach od poniedziałku do piątku.
+
+Lekcje odbywają się w określonych slotach czasowych.
+Wykaz slotów czasowych zawiera zbiór "sloty_czasowe". 
+Godzina rozpoczęcia lekcji oznaczona jest w polu "start" a koniec lekcji w polu "koniec".
+Poza slotami wymienionymi w zbiorze "sloty_czasowe" lekcje nie mogą się odbywać.
+
+Każda lekcja poświęcona jest jednemu przedmiotowi.
+Wykaz przedmiotów zawiera zbiór "przedmioty".
+Przedmioty dzielą się na profilowe i nieprofilowe.
+Przedmioty profilowe to te, których nazwa zawarta jest w polu "przedmiot_nazwa" w zbiorze "sale".
+Przedmioty nieprofilowe to te, których nazwa nie jest zawarta w polu "przedmiot_nazwa" w zbiorze "sale".
+
+Lekcje odbywają się w salach.
+Wykaz sal zawiera zbiór "sale".
+Sale dzielą się na profilowe i nieprofilowe.
+Sale profilowe to te, które w zbiorze "sale" mają pole o nazwie "przedmiot" zawierające dane o jednym lub więcej przypisanych przedmiotach.
+Sale nieprofilowe to te, które nie mają przypisanego przedmiotu.
+
+Każda klasa ma określoną liczbę lekcji w tygodniu i każdą lekcję w danej klasie prowadzi przypisany do niej nauczyciel.
+Wykaz obowiązkowej tygodniowej liczby lekcji z danego przedmiotu oraz przypisany do każdej lekcji i klasy nauczyciel zawiera zbiór "klasy_przedmioty".
+Liczba lekcji w tygodniu dla danego przedmiotu i dla danej klasy określa pole "liczba_lekcji_tygodniowo" w zbiorze "klasy_przedmioty".
+
+Każda lekcja zawiera następujące parametry: klasę, przedmiot, nauczyciela, salę, numer dnia tygodnia i slot czasowy.
+
+Pojęcia "lekcja" i "slot czasowy" nie są tożsame. Lekcja przypisywana jest do slotu czasowego. Pojęcie np. "pierwsza lekcja" nie oznacza pierwszego slotu czasowego.
+END
+
+ZBIORY DANYCH:
+START
+klasy: [
+	{"id" : 1, "rocznik" : 1, "grupa" : "a", "nazwa" : "1a"},
+	{"id" : 2, "rocznik" : 1, "grupa" : "b", "nazwa" : "1b"},
+	{"id" : 3, "rocznik" : 1, "grupa" : "c", "nazwa" : "1c"},
+	{"id" : 4, "rocznik" : 1, "grupa" : "d", "nazwa" : "1d"}
+]
+
+sloty_czasowe: [
+  { "id": 1, "start": "08:00:00", "koniec": "08:45:00" },
+  { "id": 2, "start": "08:55:00", "koniec": "09:40:00" },
+  { "id": 3, "start": "09:50:00", "koniec": "10:35:00" },
+  { "id": 4, "start": "10:45:00", "koniec": "11:30:00" },
+  { "id": 5, "start": "11:40:00", "koniec": "12:25:00" },
+  { "id": 6, "start": "12:55:00", "koniec": "13:40:00" },
+  { "id": 7, "start": "13:50:00", "koniec": "14:35:00" },
+  { "id": 8, "start": "14:45:00", "koniec": "15:30:00" },
+  { "id": 9, "start": "15:40:00", "koniec": "16:25:00" }
+]
+
+przedmioty: [
+  { "id": 1, "nazwa": "j. polski" },
+  { "id": 2, "nazwa": "j. angielski" },
+  { "id": 3, "nazwa": "j. niemiecki" },
+  { "id": 4, "nazwa": "matematyka" },
+  { "id": 5, "nazwa": "fizyka" },
+  { "id": 6, "nazwa": "chemia" },
+  { "id": 7, "nazwa": "historia" },
+  { "id": 8, "nazwa": "biologia" },
+  { "id": 9, "nazwa": "wf" },
+  { "id": 10, "nazwa": "l. wychowawcza" },
+  { "id": 11, "nazwa": "plastyka" },
+  { "id": 12, "nazwa": "technika" },
+  { "id": 13, "nazwa": "WOS" },
+  { "id": 14, "nazwa": "j. francuski" },
+  { "id": 15, "nazwa": "j. włoski" },
+  { "id": 16, "nazwa": "j. hiszpański" }
+]
+
+sale: [
+  { "sala_id": 1, "sala_piętro": 1, "sala_nazwa": "sala gimnastyczna", "przedmioty": [ { "przedmiot_id": 9, "przedmiot_nazwa": "wf" } ] },
+  { "sala_id": 2, "sala_piętro": 1, "sala_nazwa": "101", "przedmioty": [ { "przedmiot_id": 5, "przedmiot_nazwa": "fizyka" } ] },
+  { "sala_id": 3, "sala_piętro": 1, "sala_nazwa": "102", "przedmioty": [ { "przedmiot_id": 6, "przedmiot_nazwa": "chemia" } ] },
+  { "sala_id": 4, "sala_piętro": 1, "sala_nazwa": "103", "przedmioty": [ { "przedmiot_id": 8, "przedmiot_nazwa": "biologia" } ] },
+  { "sala_id": 5, "sala_piętro": 1, "sala_nazwa": "104", "przedmioty": [ { "przedmiot_id": 11, "przedmiot_nazwa": "plastyka" }, { "przedmiot_id": 12, "przedmiot_nazwa": "technika" } ] },
+  { "sala_id": 6, "sala_piętro": 1, "sala_nazwa": "105" },
+  { "sala_id": 7, "sala_piętro": 2, "sala_nazwa": "201" },
+  { "sala_id": 8, "sala_piętro": 2, "sala_nazwa": "202" },
+  { "sala_id": 9, "sala_piętro": 2, "sala_nazwa": "203" },
+  { "sala_id": 10, "sala_piętro": 2, "sala_nazwa": "204" },
+  { "sala_id": 11, "sala_piętro": 2, "sala_nazwa": "205" },
+  { "sala_id": 12, "sala_piętro": 2, "sala_nazwa": "206" },
+  { "sala_id": 13, "sala_piętro": 2, "sala_nazwa": "207" },
+  { "sala_id": 14, "sala_piętro": 3, "sala_nazwa": "301" },
+  { "sala_id": 15, "sala_piętro": 3, "sala_nazwa": "302" },
+  { "sala_id": 16, "sala_piętro": 3, "sala_nazwa": "303" },
+  { "sala_id": 17, "sala_piętro": 3, "sala_nazwa": "304" },
+  { "sala_id": 18, "sala_piętro": 3, "sala_nazwa": "305" },
+  { "sala_id": 19, "sala_piętro": 3, "sala_nazwa": "306" },
+  { "sala_id": 20, "sala_piętro": 3, "sala_nazwa": "307" }
+]
+
+nauczyciele: [
+  { "id": 1, "nazwisko": "Juliusz Słowacki" },
+  { "id": 2, "nazwisko": "Adam Mickiewicz" },
+  { "id": 3, "nazwisko": "William Shakespeare" },
+  { "id": 4, "nazwisko": "Harold Pinter" },
+  { "id": 5, "nazwisko": "Johann Goethe" },
+  { "id": 6, "nazwisko": "Heinrich Heine" },
+  { "id": 7, "nazwisko": "Marian Banach" },
+  { "id": 8, "nazwisko": "Stanisław Ulam" },
+  { "id": 9, "nazwisko": "Aleksander Wolszczan" },
+  { "id": 10, "nazwisko": "Maria Skłodowska" },
+  { "id": 11, "nazwisko": "Jan Sobieski" },
+  { "id": 12, "nazwisko": "Ludwik Hirszfeld" },
+  { "id": 13, "nazwisko": "Robert Lewandowski" },
+  { "id": 14, "nazwisko": "Jan Matejko" },
+  { "id": 15, "nazwisko": "Adam Bodnar" },
+  { "id": 16, "nazwisko": "Marcel Proust" },
+  { "id": 17, "nazwisko": "Umberto Eco" },
+  { "id": 18, "nazwisko": "Gabriel Marquez" }
+]
+
+klasy_przedmioty: [
+  {
+    "klasa": {
+      "klasa_id": 1, "klasa_nazwa": "1a",
+      "przedmioty": [
+        {
+          "liczba_lekcji_tygodniowo": 7, "przedmiot_id": 1, "przedmiot_nazwa": "j. polski",
+          "nauczyciel": { "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 3, "przedmiot_id": 2, "przedmiot_nazwa": "j. angielski",
+          "nauczyciel": { "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 3, "przedmiot_nazwa": "j. niemiecki",
+          "nauczyciel": { "nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 3, "przedmiot_id": 4, "przedmiot_nazwa": "matematyka",
+          "nauczyciel": { "nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 5, "przedmiot_nazwa": "fizyka",
+          "nauczyciel": { "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 6, "przedmiot_nazwa": "chemia",
+          "nauczyciel": { "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 4, "przedmiot_id": 7, "przedmiot_nazwa": "historia",
+          "nauczyciel": { "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 9, "przedmiot_nazwa": "wf",
+          "nauczyciel": { "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza",
+          "nauczyciel": { "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 13, "przedmiot_nazwa": "WOS",
+          "nauczyciel": { "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar" }
+        }
+      ]
+    }
+  },
+  {
+    "klasa": {
+      "klasa_id": 2, "klasa_nazwa": "1b",
+      "przedmioty": [
+        {
+          "liczba_lekcji_tygodniowo": 5, "przedmiot_id": 1, "przedmiot_nazwa": "j. polski",
+          "nauczyciel": { "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 3, "przedmiot_id": 2, "przedmiot_nazwa": "j. angielski",
+          "nauczyciel": { "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 14, "przedmiot_nazwa": "j. francuski",
+          "nauczyciel": { "nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 3, "przedmiot_id": 4, "przedmiot_nazwa": "matematyka",
+          "nauczyciel": { "nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 5, "przedmiot_nazwa": "fizyka",
+          "nauczyciel": { "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 6, "przedmiot_nazwa": "chemia",
+          "nauczyciel": { "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 7, "przedmiot_nazwa": "historia",
+          "nauczyciel": { "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 8, "przedmiot_nazwa": "biologia",
+          "nauczyciel": { "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 9, "przedmiot_nazwa": "wf",
+          "nauczyciel": { "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza",
+          "nauczyciel": { "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 11, "przedmiot_nazwa": "plastyka",
+          "nauczyciel": { "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 12, "przedmiot_nazwa": "technika",
+          "nauczyciel": { "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 13, "przedmiot_nazwa": "WOS",
+          "nauczyciel": { "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar" }
+        }
+      ]
+    }
+  },
+  {
+    "klasa": {
+      "klasa_id": 3, "klasa_nazwa": "1c",
+      "przedmioty": [
+        {
+          "liczba_lekcji_tygodniowo": 5, "przedmiot_id": 1, "przedmiot_nazwa": "j. polski",
+          "nauczyciel": { "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 3, "przedmiot_id": 2, "przedmiot_nazwa": "j. angielski",
+          "nauczyciel": { "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 15, "przedmiot_nazwa": "j. włoski",
+          "nauczyciel": { "nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 3, "przedmiot_id": 4, "przedmiot_nazwa": "matematyka",
+          "nauczyciel": { "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 5, "przedmiot_nazwa": "fizyka",
+          "nauczyciel": { "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 6, "przedmiot_nazwa": "chemia",
+          "nauczyciel": { "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 7, "przedmiot_nazwa": "historia",
+          "nauczyciel": { "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 8, "przedmiot_nazwa": "biologia",
+          "nauczyciel": { "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 9, "przedmiot_nazwa": "wf",
+          "nauczyciel": { "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza",
+          "nauczyciel": { "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 11, "przedmiot_nazwa": "plastyka",
+          "nauczyciel": { "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 12, "przedmiot_nazwa": "technika",
+          "nauczyciel": { "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 13, "przedmiot_nazwa": "WOS",
+          "nauczyciel": { "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar" }
+        }
+      ]
+    }
+  },
+  {
+    "klasa": {
+      "klasa_id": 4, "klasa_nazwa": "1d",
+      "przedmioty": [
+        {
+          "liczba_lekcji_tygodniowo": 5, "przedmiot_id": 1, "przedmiot_nazwa": "j. polski",
+          "nauczyciel": { "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 3, "przedmiot_id": 2, "przedmiot_nazwa": "j. angielski",
+          "nauczyciel": { "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 16, "przedmiot_nazwa": "j. hiszpański",
+          "nauczyciel": { "nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 3, "przedmiot_id": 4, "przedmiot_nazwa": "matematyka",
+          "nauczyciel": { "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 5, "przedmiot_nazwa": "fizyka",
+          "nauczyciel": { "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 6, "przedmiot_nazwa": "chemia",
+          "nauczyciel": { "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 7, "przedmiot_nazwa": "historia",
+          "nauczyciel": { "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 8, "przedmiot_nazwa": "biologia",
+          "nauczyciel": { "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 2, "przedmiot_id": 9, "przedmiot_nazwa": "wf",
+          "nauczyciel": { "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza",
+          "nauczyciel": { "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 11, "przedmiot_nazwa": "plastyka",
+          "nauczyciel": { "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 12, "przedmiot_nazwa": "technika",
+          "nauczyciel": { "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko" }
+        },
+        {
+          "liczba_lekcji_tygodniowo": 1, "przedmiot_id": 13, "przedmiot_nazwa": "WOS",
+          "nauczyciel": { "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar" }
+        }
+      ]
+    }
+  }
+]
+
+END
+
+REGUŁY:
+START
+1) Wszystkie poniższe reguły obowiązują łącznie i wszystkie powinny być brane pod uwagę podczas analizy danych i opracowywania harmonogramu / odpowiedzi na pytania testowe
+2) Nie wszystkie sloty czasowe muszą być wykorzystane przez daną klasę w danym dniu, czyli klasy nie muszą rozpoczynać lekcji od pierwszego slotu i nie muszą kończyć na ostatnim slocie.
+3) Lekcje danej klasy powinny odbywać się w kolejno następujących po sobie slotach czasowych pomiędzy pierwszą a ostatnią lekcją.
+4) Jeśli dany przedmiot jest przedmiotem profilowym to lekcje z tego przedmiotu muszą odbywać się wyłącznie w tej sali.
+5) W przypadku sal profilowych lekcje z przypisanych do nich przedmiotów mają najwyższy priorytet w rezerwacji tej sali.
+6) Jeśli danego dnia w danym slocie czasowym sala profilowa jest wolna to w tej sali mogą odbywać się lekcje z innych ale wyłącznie nieprofilowych przedmiotów, czyli ta reguła nie dotyczy przedmiotów profilowych.
+7) Lekcje z przedmiotów nieprofilowych, w pierwszej kolejności powinny odbywać się w tej samej, nieprofilowej sali, 
+ale gdy w danym slocie czasowym nie ma takiej możliwości to mogą odbywać się w dowolnej sali poza salą o nazwie "sala gimnastyczna".
+8) W jednym slocie czasowym (czyli w jednej godzinie lekcyjnej) w jednej sali może odbywać się dokładnie jedna lekcja, która spełnia jednocześnie wszystkie poniższe warunki:
+    a) Dotyczy jednej klasy
+    b) Dotyczy jednego przedmiotu
+    c) Prowadzona jest przez jednego nauczyciela
+    d) Odbywa się w jednej sali
+    e) Nie może być żadnej innej lekcji w tej samej sali w tym samym czasie — niezależnie od klasy, przedmiotu czy nauczyciela
+9) W jednym slocie czasowym w danym dniu tygodnia dany nauczyciel może prowadzić tylko jedną lekcję.
+10) W jednym slocie czasowym w danym dniu tygodnia dana klasa może mieć tylko jedną lekcję.
+11) Każda klasa w jednym dniu może mieć maksimum 2 lekcje z tego samego przedmiotu.
+12) Jeśli danego dnia dana klasa ma dwie lekcje z tego samego przedmiotu to powinny się one odbywać w tej samej sali oraz w dwóch bezpośrednio następujących po sobie slotach czasowych.
+13) Lekcje powinny zostać w miarę możliwości rozłożone równomiernie na cały tydzień
+END
+
+OPIS OCZEKIWANEJ ODPOWIEDZI:
+START
+Wygeneruj harmonogram lekcji dla klas 1a i 1b z uwzględnieniem powyższych reguł i danych.
+Harmonogram powinien obejmować tylko jeden dzień, np. poniedziałek i dla każdej klasy powinien zaangażować jak największą liczbę przedmiotów z jak największą liczbą nauczycieli.
+Harmonogram posortuj wg. klasy i slotów czasowych.
+Po wygenerowaniu harmonogramu przedstaw go w postaci tabeli o następujących kolumnach: godziny startu i końca lekcji, nazwa klasy, nazwa sali, nazwa przedmiotu, nazwisko nauczyciela.
+END
+
+
+
+TEST (udziel odpowiedzi w schemacie: treść pytania || odpowiedź na pytanie ||| podstawa udzielonej odpowiedzi):
+- ile klas prowadzi szkoła?
+- ile jest roczników?
+- jakie id ma klasa 1b?
+- jaką nazwę ma klasa o id=4?
+- jakie id ma klasa 1e?
+- czy jest możliwe aby w tym samym slocie czasowym tego samego dnia klasy 1a i 1b miały lekcję w sali numer 2?
+- czy jest możliwe aby w tym samym slocie czasowym tego samego dnia klasa 1a miała lekcję w sali numer 3 a 1b miała lekcję w sali numer 5?
+- czy jest możliwe aby w tym samym slocie czasowym tego samego dnia nauczyciel prowadził lekcję dla klas 1c i 1d?
+- czy jest możliwe aby w tym samym slocie czasowym tego samego dnia nauczyciel X prowadził lekcję dla klasy 1c i nauczyciel Y prowadził lekcję dla klasy 1d?
+- czy jest możliwe aby w tym samym slocie czasowym tego samego dnia nauczyciel X prowadził lekcję dla klasy 1c a w następnym slocie czasowym prowadził lekcję dla klasy 1d?
+- czy klasa 1b może mieć trzy lekcje j. polskiego w ciągu dnia?
+- czy klasa 1c może mieć lekcje w soboty?
+- czy klasa może mieć pierwszą lekcję o godz. 8:00 a drugą o 8:55?
+- czy klasa może mieć pierwszą lekcję o godz. 8:00 a drugą o 9:50?
+- czy klasa może mieć pierwszą lekcję o godz. 8:00 a drugą o 16:35?
+- czy klasa może mieć pierwszą lekcję o godz. 8:55?
+- czy klasa może mieć pierwszą lekcję o godz. 9:50?
+- czy klasa może mieć ostatnią lekcję o godz. 11:40?
+- czy klasa może mieć tego samego dnia dwie lekcje fizyki, pierwszą o godz. 8:00 a drugą o 8:55?
+- czy klasa może mieć tego samego dnia dwie lekcje fizyki, pierwszą o godz. 8:00 a drugą o 9:50?
+- czy sala "201" jest salą profilową?
+- czy fizyka jest przedmiotem profilowym?
+- czy lekcje fizyki mogą odbywać się w sali o nazwie "201"?
+- czy lekcje chemii mogą odbywać się w sali o nazwie "102"?
+- czy lekcje WOS mogą odbywać się w sali o nazwie "sala gimnastyczna"?
+- do jakiego przedmiotu w różnych klasach przypisany jest nauczyciel Adam Mickiewicz?
+- w których klasach i jakiego przedmiotu naucza Marian Banach?
+- ile lekcji języka polskiego tygodniowo ma klasa 1a?
+- ile lekcji w tygodniu prowadzi Jan Sobieski?
+- ile lekcji matematyki łącznie odbywa się w szkole?
+- podaj nazwiska wszystkich nauczycieli, którzy prowadzą lekcję języków (język polski i obce) wraz z nazwą przedmiotów, których nauczają
+Dla każdego pytania podaj konkretne odpowiedzi, bez żadnych komentarzy
+
+
+
+
+
+
+
+Przekształcone reguły harmonogramu
+🔹 Reguła 1 – Wszystkie reguły obowiązują łącznie
+Interpretacja: Nie można stosować jednej reguły w oderwaniu od pozostałych. Harmonogram musi spełniać wszystkie warunki jednocześnie.
+
+🔹 Reguła 2 – Sloty nie muszą być w pełni wykorzystane
+Warunek: Klasa może zacząć lekcje później niż w pierwszym slocie i zakończyć wcześniej niż w ostatnim.
+
+Przykład: Klasa może mieć lekcje od 9:50 do 11:40, pomijając wcześniejsze godziny.
+
+🔹 Reguła 3 – Lekcje muszą być w kolejnych slotach
+Warunek: Jeśli klasa ma więcej niż jedną lekcję danego dnia, muszą one być w kolejnych godzinach.
+
+Przykład: Sloty 2 i 3 są OK, ale sloty 2 i 4 są niedozwolone.
+
+🔹 Reguła 4 – Przedmioty profilowe tylko w salach profilowych
+Warunek: Przedmiot przypisany do sali profilowej musi być tam realizowany.
+
+Przykład: Fizyka przypisana do sali 201 → lekcja fizyki tylko w sali 201.
+
+🔹 Reguła 5 – Priorytet sal profilowych dla przypisanych przedmiotów
+Warunek: Jeśli sala profilowa jest dostępna, przedmiot do niej przypisany ma pierwszeństwo.
+
+Przykład: Jeśli sala 201 jest wolna, fizyka ma pierwszeństwo przed innymi przedmiotami.
+
+🔹 Reguła 6 – Sala profilowa może być użyta przez inne przedmioty, ale tylko nieprofilowe
+Warunek: Jeśli sala profilowa jest wolna, może być użyta przez przedmiot nieprofilowy.
+
+Ograniczenie: Nie można w niej prowadzić innych przedmiotów profilowych.
+
+Przykład: W sali chemicznej może odbyć się lekcja WOS, ale nie fizyki.
+
+🔹 Reguła 7 – Przedmioty nieprofilowe preferują stałą salę
+Warunek: Przedmioty nieprofilowe powinny mieć przypisaną stałą salę.
+
+Wyjątek: Jeśli nie jest dostępna, można użyć dowolnej sali poza salą gimnastyczną.
+
+🔹 Reguła 8 – Jedna lekcja na salę w jednym slocie
+Warunki:
+
+W jednej sali w jednym slocie może być tylko jedna lekcja.
+
+Dotyczy jednej klasy, jednego przedmiotu, jednego nauczyciela.
+
+Przykład: Klasa 1a ma fizykę w sali 201 o 8:00 → żadna inna lekcja nie może się tam odbywać o tej godzinie.
+
+🔹 Reguła 9 – Nauczyciel może prowadzić tylko jedną lekcję w jednym slocie
+Warunek: Nauczyciel nie może być przypisany do dwóch klas w tym samym czasie.
+
+Przykład: Maria Skłodowska nie może prowadzić chemii dla 1b i 1c o 9:50.
+
+🔹 Reguła 10 – Klasa może mieć tylko jedną lekcję w jednym slocie
+Warunek: Klasa nie może mieć dwóch lekcji jednocześnie.
+
+Przykład: Klasa 1a nie może mieć matematyki i historii o 10:45.
+
+🔹 Reguła 11 – Maksymalnie 2 lekcje tego samego przedmiotu dziennie
+Warunek: Klasa może mieć maksymalnie dwie lekcje np. fizyki w ciągu jednego dnia.
+
+🔹 Reguła 12 – Podwójne lekcje muszą być w tej samej sali i kolejnych slotach
+Warunki:
+
+Muszą być w tej samej sali.
+
+Muszą być w bezpośrednio następujących slotach.
+
+Przykład: Fizyka o 8:00 i 8:55 w sali 201 → OK. Fizyka o 8:00 i 9:50 → NIE.
+
+🔹 Reguła 13 – Lekcje powinny być równomiernie rozłożone na tydzień
+Warunek: Nie należy kumulować wszystkich lekcji danego przedmiotu w jednym dniu.
+
+Przykład: Język polski 7x w tygodniu → lepiej rozłożyć po 1–2 lekcje dziennie.
