@@ -4,11 +4,11 @@ type Query {
   	hello: String
   	@field(resolver: "App\\GraphQL\\Queries\\HelloQuery")
 
-  	getChatAnswer(input: chatAnswer): String
+  	getChatAnswer(input: chatQuestion): String
   	@field(resolver: "App\\GraphQL\\Queries\\GetChatAnswer")
 }
 
-input chatAnswer {
+input chatQuestion {
 	prompt: String!
 }
 

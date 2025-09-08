@@ -10,7 +10,7 @@ const client = new ApolloClient({
 
 // Definicja zapytania GraphQL
 const CHAT_QUERY = gql`
-  query GetChatAnswer($input: chatAnswer!) {
+  query GetChatAnswer($input: chatQuestion!) {
     getChatAnswer(input: $input)
   }
 `;

@@ -2,7 +2,7 @@ Jesteś specjalistą ds. planowania.
 Twoim zadaniem jest opracowanie planu lekcji w szkole.
 Szczegóły dotyczące zadania, tj. zasoby, które należy uwzględnić oraz reguły, którymi należy kierować się podczas opracowywania planu znajdują się poniżej.
 
-Opis zadanie składa się z 4 części: 
+Opis zadania składa się z 4 części: 
 1) OGÓLNY OPIS (zawiera ideę zadania, ogólnie przedstawia kontekst i podstawowe zależności pomiędzy obiektami będącymi przedmiotem reguł itd.)
 2) ZBIORY DANYCH (zawiera szczegółowe informacje nt. obiektów)
 3) REGUŁY (zawiera szczegółowe zasady, według których zadanie powinno zostać wykonane)
