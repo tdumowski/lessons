@@ -4,12 +4,15 @@ namespace App\GraphQL\Queries;
 
 // use Illuminate\Support\Facades\Auth;
 
-// define('API_KEY', 'AIzaSyDzRNOjpiTU0CCms0RGCqxJfhlLA5WQUdw'); // 🔐 Wklej swój klucz
+// define('API_KEY', env("CHAT_API_KEY_GEMINI")); // 🔐 Wklej swój klucz
 // define('MODEL', 'gemini-2.0-flash'); // lub np. 'gemini-1.5-flash'
 // define('BASEURL', 'https://generativelanguage.googleapis.com/v1');
-define('API_KEY', 'sk-74458534b7d944b6a4da32c960817d36'); // 🔐 Wklej swój klucz
-define('MODEL', 'deepseek-chat'); // lub np. 'gemini-1.5-flash'
+define('API_KEY', env("CHAT_API_KEY_DEEPSEEK")); // 🔐 Wklej swój klucz
+define('MODEL', 'deepseek-chat'); // lub 'deepseek-reasoner'
 define('BASEURL', 'https://api.deepseek.com');
+define('CACHE_DIR', '/tmp/cache/'); // 📂 Katalog do przechowywania cache
+define('CACHE_TTL', 3600); // 🕒 Czas życia cache w sekundach (np. 1 godzina)
+define('TEMPERATURE', 0.7); // 🌡️ Domyślna temperatura odpowiedzi (0.0–2.0)
 
 final readonly class GetChatAnswer
 {
@@ -17,6 +20,12 @@ final readonly class GetChatAnswer
     public function __invoke(null $_, array $args)
     {
         $prompt = $args["input"]["prompt"];
+        $temperature = isset($args["input"]["temperature"]) ? (float)$args["input"]["temperature"] : TEMPERATURE; // Dynamiczna temperatura z argumentów lub domyślna
+
+        $cacheKey = md5($prompt . '|' . $temperature); // 🔑 Generujemy unikalny klucz na podstawie promptu
+
+        $cacheKey = md5($prompt); // 🔑 Generujemy unikalny klucz na podstawie promptu
+        $cacheFile = CACHE_DIR . $cacheKey . '.cache';
 
         $modelShortName = substr(MODEL, 0, 6);
         if($modelShortName == "gemini") {
@@ -52,6 +61,15 @@ final readonly class GetChatAnswer
             $chatAnswer = $responseArray['candidates'][0]['content']['parts'][0]['text'];
         }
         else if($modelShortName == "deepse") {
+            // 🟢 Sprawdzamy, czy odpowiedź jest w cache (cache hit)
+            if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < CACHE_TTL) {
+                $chatAnswer = file_get_contents($cacheFile);
+                if ($chatAnswer !== false) {
+                    return $chatAnswer; // Cache hit
+                }
+            }
+
+            // 🔴 Cache miss - wysyłamy żądanie do API
             $url = BASEURL . "/chat/completions";
 
             $data = [
@@ -62,6 +80,7 @@ final readonly class GetChatAnswer
                     "content" => $prompt
                     ]
                 ],
+                "temperature" => $temperature, // Dodajemy parametr temperature
                 "stream" => false
             ];
 
@@ -89,6 +108,11 @@ final readonly class GetChatAnswer
 
             $chatAnswer = $responseArray['choices'][0]['message']['content'];
 
+            // 💾 Zapisujemy odpowiedź do cache
+            if (!is_dir(CACHE_DIR)) {
+                mkdir(CACHE_DIR, 0755, true);
+            }
+            file_put_contents($cacheFile, $chatAnswer);
         }
         else {
             return;
