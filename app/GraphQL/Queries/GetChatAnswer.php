@@ -1,24 +1,38 @@
-<?php declare(strict_types=1);
+<?php 
+declare(strict_types=1);
 
 namespace App\GraphQL\Queries;
 
 // use Illuminate\Support\Facades\Auth;
 
+//GOOGLE GEMINI
 // define('API_KEY', env("CHAT_API_KEY_GEMINI")); // 🔐 Wklej swój klucz
 // define('MODEL', 'gemini-2.0-flash'); // lub np. 'gemini-1.5-flash'
 // define('BASEURL', 'https://generativelanguage.googleapis.com/v1');
+
+//DEEPSEEK
 define('API_KEY', env("CHAT_API_KEY_DEEPSEEK")); // 🔐 Wklej swój klucz
 define('MODEL', 'deepseek-chat'); // lub 'deepseek-reasoner'
 define('BASEURL', 'https://api.deepseek.com');
+
+//ANTHROPIC CLAUDE
+// define('API_KEY', env("CHAT_API_KEY_CLAUDE")); // 🔐 Twój klucz API Claude
+// define('MODEL', 'claude-sonnet-4-0'); // lub np. claude-2.1
+// define('BASEURL', 'https://api.anthropic.com/v1/messages');
+
+define('MAX_TOKENS', 1024); // Maksymalna liczba tokenów
 define('CACHE_DIR', '/tmp/cache/'); // 📂 Katalog do przechowywania cache
 define('CACHE_TTL', 3600); // 🕒 Czas życia cache w sekundach (np. 1 godzina)
 define('TEMPERATURE', 0.7); // 🌡️ Domyślna temperatura odpowiedzi (0.0–2.0)
 
 final readonly class GetChatAnswer
 {
+    
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args)
     {
+        set_time_limit(180);
+
         $prompt = $args["input"]["prompt"];
         $temperature = isset($args["input"]["temperature"]) ? (float)$args["input"]["temperature"] : TEMPERATURE; // Dynamiczna temperatura z argumentów lub domyślna
 
@@ -114,6 +128,46 @@ final readonly class GetChatAnswer
             }
             file_put_contents($cacheFile, $chatAnswer);
         }
+        else if($modelShortName == "claude") {
+            $url = BASEURL;
+
+            $data = [
+                "model" => MODEL,
+                "max_tokens" => MAX_TOKENS,
+                "messages" => [
+                    [
+                        "role" => "user",
+                        "content" => $prompt
+                    ],
+                ],
+                // "temperature" => $temperature, // Dodajemy parametr temperature
+                // "stream" => false
+            ];
+
+            $jsonData = json_encode($data);
+
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'x-api-key: ' . API_KEY,
+                'anthropic-version: 2023-06-01'
+            ]);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 120); // ⏱️ Timeout na wszelki wypadek
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            $responseArray = json_decode($response, true);
+
+            if (!isset($responseArray['content'][0]['text'])) {
+                return "Brak odpowiedzi lub błąd Claude.";
+            }
+
+            $chatAnswer = $responseArray['content'][0]['text'];
+        }
         else {
             return;
         }
@@ -122,6 +176,40 @@ final readonly class GetChatAnswer
             $chatAnswer = substr($chatAnswer, 0, -1);
         }
 
+
+
+        if(json_validate($chatAnswer)) {
+            $firstTest = true;
+        }
+        else {
+            $firstTest = false;
+        }
+
+        if(!$firstTest) {
+            $cleanJson = self::extractJsonBlock($chatAnswer);
+        }
+
+        if($cleanJson) {
+            $secondTest = true;
+            $chatAnswer = $cleanJson;
+        }
+        else {
+            $secondTest = false;
+        }
+
         return $chatAnswer;
     }
+
+    private static function extractJsonBlock($string) {
+        $start = strpos($string, '{');
+        $end = strrpos($string, '}');
+        if ($start !== false && $end !== false && $end > $start) {
+            $jsonCandidate = substr($string, $start, $end - $start + 1);
+            if(json_validate($jsonCandidate)) {
+                return $jsonCandidate;
+            }
+        }
+        return null;
+    }
+
 }

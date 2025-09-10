@@ -24,7 +24,7 @@ Wykaz dni tygodnia zawiera zbiór "dni_tygodnia".
 
 Lekcje odbywają się w określonych slotach czasowych.
 Wykaz slotów czasowych zawiera zbiór "sloty_czasowe". 
-Godzina rozpoczęcia lekcji oznaczona jest w polu "start" a koniec lekcji w polu "koniec".
+Godzina rozpoczęcia lekcji oznaczona jest w polu "start_lekcji" a koniec lekcji w polu "koniec_lekcji".
 Poza slotami wymienionymi w zbiorze "sloty_czasowe" lekcje nie mogą się odbywać.
 
 Każda lekcja poświęcona jest jednemu przedmiotowi.
@@ -78,15 +78,15 @@ dni_tygodnia: [
 ]
 
 sloty_czasowe: [
-  { "id": 1, "start": "08:00:00", "koniec": "08:45:00" },
-  { "id": 2, "start": "08:55:00", "koniec": "09:40:00" },
-  { "id": 3, "start": "09:50:00", "koniec": "10:35:00" },
-  { "id": 4, "start": "10:45:00", "koniec": "11:30:00" },
-  { "id": 5, "start": "11:40:00", "koniec": "12:25:00" },
-  { "id": 6, "start": "12:55:00", "koniec": "13:40:00" },
-  { "id": 7, "start": "13:50:00", "koniec": "14:35:00" },
-  { "id": 8, "start": "14:45:00", "koniec": "15:30:00" },
-  { "id": 9, "start": "15:40:00", "koniec": "16:25:00" }
+  { "id": 1, "start_lekcji": "08:00:00", "koniec_lekcji": "08:45:00" },
+  { "id": 2, "start_lekcji": "08:55:00", "koniec_lekcji": "09:40:00" },
+  { "id": 3, "start_lekcji": "09:50:00", "koniec_lekcji": "10:35:00" },
+  { "id": 4, "start_lekcji": "10:45:00", "koniec_lekcji": "11:30:00" },
+  { "id": 5, "start_lekcji": "11:40:00", "koniec_lekcji": "12:25:00" },
+  { "id": 6, "start_lekcji": "12:55:00", "koniec_lekcji": "13:40:00" },
+  { "id": 7, "start_lekcji": "13:50:00", "koniec_lekcji": "14:35:00" },
+  { "id": 8, "start_lekcji": "14:45:00", "koniec_lekcji": "15:30:00" },
+  { "id": 9, "start_lekcji": "15:40:00", "koniec_lekcji": "16:25:00" }
 ]
 
 przedmioty: [
@@ -109,26 +109,26 @@ przedmioty: [
 ]
 
 sale: [
-  { "sala_id": 1, "sala_piętro": 1, "sala_nazwa": "sala gimnastyczna", "przedmioty": [ { "przedmiot_id": 9, "przedmiot_nazwa": "wf" } ] },
-  { "sala_id": 2, "sala_piętro": 1, "sala_nazwa": "101", "przedmioty": [ { "przedmiot_id": 5, "przedmiot_nazwa": "fizyka" } ] },
-  { "sala_id": 3, "sala_piętro": 1, "sala_nazwa": "102", "przedmioty": [ { "przedmiot_id": 6, "przedmiot_nazwa": "chemia" } ] },
-  { "sala_id": 4, "sala_piętro": 1, "sala_nazwa": "103", "przedmioty": [ { "przedmiot_id": 8, "przedmiot_nazwa": "biologia" } ] },
-  { "sala_id": 5, "sala_piętro": 1, "sala_nazwa": "104", "przedmioty": [ { "przedmiot_id": 11, "przedmiot_nazwa": "plastyka" }, { "przedmiot_id": 12, "przedmiot_nazwa": "technika" } ] },
-  { "sala_id": 6, "sala_piętro": 1, "sala_nazwa": "105" },
-  { "sala_id": 7, "sala_piętro": 2, "sala_nazwa": "201" },
-  { "sala_id": 8, "sala_piętro": 2, "sala_nazwa": "202" },
-  { "sala_id": 9, "sala_piętro": 2, "sala_nazwa": "203" },
-  { "sala_id": 10, "sala_piętro": 2, "sala_nazwa": "204" },
-  { "sala_id": 11, "sala_piętro": 2, "sala_nazwa": "205" },
-  { "sala_id": 12, "sala_piętro": 2, "sala_nazwa": "206" },
-  { "sala_id": 13, "sala_piętro": 2, "sala_nazwa": "207" },
-  { "sala_id": 14, "sala_piętro": 3, "sala_nazwa": "301" },
-  { "sala_id": 15, "sala_piętro": 3, "sala_nazwa": "302" },
-  { "sala_id": 16, "sala_piętro": 3, "sala_nazwa": "303" },
-  { "sala_id": 17, "sala_piętro": 3, "sala_nazwa": "304" },
-  { "sala_id": 18, "sala_piętro": 3, "sala_nazwa": "305" },
-  { "sala_id": 19, "sala_piętro": 3, "sala_nazwa": "306" },
-  { "sala_id": 20, "sala_piętro": 3, "sala_nazwa": "307" }
+  { "id": 1, "piętro": 1, "nazwa": "WF", "przedmioty": [ { "przedmiot_id": 9, "przedmiot_nazwa": "wf" } ] },
+  { "id": 2, "piętro": 1, "nazwa": "101", "przedmioty": [ { "przedmiot_id": 5, "przedmiot_nazwa": "fizyka" } ] },
+  { "id": 3, "piętro": 1, "nazwa": "102", "przedmioty": [ { "przedmiot_id": 6, "przedmiot_nazwa": "chemia" } ] },
+  { "id": 4, "piętro": 1, "nazwa": "103", "przedmioty": [ { "przedmiot_id": 8, "przedmiot_nazwa": "biologia" } ] },
+  { "id": 5, "piętro": 1, "nazwa": "104", "przedmioty": [ { "przedmiot_id": 11, "przedmiot_nazwa": "plastyka" }, { "przedmiot_id": 12, "przedmiot_nazwa": "technika" } ] },
+  { "id": 6, "piętro": 1, "nazwa": "105" },
+  { "id": 7, "piętro": 2, "nazwa": "201" },
+  { "id": 8, "piętro": 2, "nazwa": "202" },
+  { "id": 9, "piętro": 2, "nazwa": "203" },
+  { "id": 10, "piętro": 2, "nazwa": "204" },
+  { "id": 11, "piętro": 2, "nazwa": "205" },
+  { "id": 12, "piętro": 2, "nazwa": "206" },
+  { "id": 13, "piętro": 2, "nazwa": "207" },
+  { "id": 14, "piętro": 3, "nazwa": "301" },
+  { "id": 15, "piętro": 3, "nazwa": "302" },
+  { "id": 16, "piętro": 3, "nazwa": "303" },
+  { "id": 17, "piętro": 3, "nazwa": "304" },
+  { "id": 18, "piętro": 3, "nazwa": "305" },
+  { "id": 19, "piętro": 3, "nazwa": "306" },
+  { "id": 20, "piętro": 3, "nazwa": "307" }
 ]
 
 nauczyciele: [
@@ -152,206 +152,172 @@ nauczyciele: [
   { "id": 18, "nazwisko": "Gabriel Marquez" }
 ]
 
-{
-  "klasy_przedmioty": [
-    {"klasy": {"klasa_id": 1, "klasa_nazwa": "1a", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 7, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 3, "przedmiot_nazwa": "j. niemiecki", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 4, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 2, "klasa_nazwa": "1b", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 14, "przedmiot_nazwa": "j. francuski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 8, "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 11, "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 12, "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 3, "klasa_nazwa": "1c", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 15, "przedmiot_nazwa": "j. włoski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 8, "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 11, "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 12, "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 4, "klasa_nazwa": "1d", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 16, "przedmiot_nazwa": "j. hiszpański", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 8, "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 11, "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 12, "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 5, "klasa_nazwa": "2a", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 8, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 3, "przedmiot_nazwa": "j. niemiecki", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 6, "klasa_nazwa": "2b", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 14, "przedmiot_nazwa": "j. francuski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 8, "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 11, "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 12, "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 7, "klasa_nazwa": "2c", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 15, "przedmiot_nazwa": "j. włoski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 8, "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 11, "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 12, "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 8, "klasa_nazwa": "2d", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 16, "przedmiot_nazwa": "j. hiszpański", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 8, "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 11, "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 12, "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 9, "klasa_nazwa": "3a", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 8, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 3, "przedmiot_nazwa": "j. niemiecki", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 10, "klasa_nazwa": "3b", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 6, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 14, "przedmiot_nazwa": "j. francuski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 11, "klasa_nazwa": "3c", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 15, "przedmiot_nazwa": "j. włoski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 12, "klasa_nazwa": "3d", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 16, "przedmiot_nazwa": "j. hiszpański", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 8, "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 13, "klasa_nazwa": "4a", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 9, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 3, "przedmiot_nazwa": "j. niemiecki", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 6, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 14, "klasa_nazwa": "4b", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 6, "nauczyciel": {"nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 14, "przedmiot_nazwa": "j. francuski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust"}},
-      {"przedmiot_id": 7, "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 4, "nauczyciel": {"nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 15, "klasa_nazwa": "4c", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 15, "przedmiot_nazwa": "j. włoski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco"}},
-      {"przedmiot_id": 4, "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 6, "nauczyciel": {"nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"}},
-      {"przedmiot_id": 5, "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 5, "nauczyciel": {"nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}},
-    {"klasy": {"klasa_id": 16, "klasa_nazwa": "4d", "przedmioty": [
-      {"przedmiot_id": 1, "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"}},
-      {"przedmiot_id": 2, "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 16, "przedmiot_nazwa": "j. hiszpański", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez"}},
-      {"przedmiot_id": 6, "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 6, "nauczyciel": {"nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"}},
-      {"przedmiot_id": 8, "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 6, "nauczyciel": {"nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"}},
-      {"przedmiot_id": 9, "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel": {"nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"}},
-      {"przedmiot_id": 10, "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"}},
-      {"przedmiot_id": 13, "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel": {"nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}}
-    ]}}
-  ]
-}
+klasy_przedmioty: [
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 7, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "j. niemiecki", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 4, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 1, "klasa_nazwa": "1a", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "j. francuski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 2, "klasa_nazwa": "1b", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "j. włoski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 3, "klasa_nazwa": "1c", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "j. hiszpański", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 4, "klasa_nazwa": "1d", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 8, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "j. niemiecki", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 5, "klasa_nazwa": "2a", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "j. francuski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 6, "klasa_nazwa": "2b", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "j. włoski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 7, "klasa_nazwa": "2c", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "j. hiszpański", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "plastyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "technika", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 14, "nauczyciel_nazwisko": "Jan Matejko"},
+    {"klasa_id": 8, "klasa_nazwa": "2d", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 9, "klasa_nazwa": "3a", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 8, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 9, "klasa_nazwa": "3a", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 9, "klasa_nazwa": "3a", "przedmiot_nazwa": "j. niemiecki", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe"},
+    {"klasa_id": 9, "klasa_nazwa": "3a", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"},
+    {"klasa_id": 9, "klasa_nazwa": "3a", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 9, "klasa_nazwa": "3a", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 9, "klasa_nazwa": "3a", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 9, "klasa_nazwa": "3a", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 6, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "j. francuski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 7, "nauczyciel_nazwisko": "Marian Banach"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 10, "klasa_nazwa": "3b", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "j. włoski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 11, "klasa_nazwa": "3c", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "j. hiszpański", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 12, "klasa_nazwa": "3d", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 13, "klasa_nazwa": "4a", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 9, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 13, "klasa_nazwa": "4a", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 13, "klasa_nazwa": "4a", "przedmiot_nazwa": "j. niemiecki", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 5, "nauczyciel_nazwisko": "Johann Goethe"},
+    {"klasa_id": 13, "klasa_nazwa": "4a", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 6, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 13, "klasa_nazwa": "4a", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 13, "klasa_nazwa": "4a", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 13, "klasa_nazwa": "4a", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 14, "klasa_nazwa": "4b", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 6, "nauczyciel_id": 1, "nauczyciel_nazwisko": "Juliusz Słowacki"},
+    {"klasa_id": 14, "klasa_nazwa": "4b", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 14, "klasa_nazwa": "4b", "przedmiot_nazwa": "j. francuski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 16, "nauczyciel_nazwisko": "Marcel Proust"},
+    {"klasa_id": 14, "klasa_nazwa": "4b", "przedmiot_nazwa": "historia", "liczba_lekcji_tygodniowo": 4, "nauczyciel_id": 11, "nauczyciel_nazwisko": "Jan Sobieski"},
+    {"klasa_id": 14, "klasa_nazwa": "4b", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 14, "klasa_nazwa": "4b", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 14, "klasa_nazwa": "4b", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 15, "klasa_nazwa": "4c", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 15, "klasa_nazwa": "4c", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 15, "klasa_nazwa": "4c", "przedmiot_nazwa": "j. włoski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 17, "nauczyciel_nazwisko": "Umberto Eco"},
+    {"klasa_id": 15, "klasa_nazwa": "4c", "przedmiot_nazwa": "matematyka", "liczba_lekcji_tygodniowo": 6, "nauczyciel_id": 8, "nauczyciel_nazwisko": "Stanisław Ulam"},
+    {"klasa_id": 15, "klasa_nazwa": "4c", "przedmiot_nazwa": "fizyka", "liczba_lekcji_tygodniowo": 5, "nauczyciel_id": 9, "nauczyciel_nazwisko": "Aleksander Wolszczan"},
+    {"klasa_id": 15, "klasa_nazwa": "4c", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 15, "klasa_nazwa": "4c", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 3, "nauczyciel_nazwisko": "William Shakespeare"},
+    {"klasa_id": 15, "klasa_nazwa": "4c", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"},
+    {"klasa_id": 16, "klasa_nazwa": "4d", "przedmiot_nazwa": "j. polski", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 2, "nauczyciel_nazwisko": "Adam Mickiewicz"},
+    {"klasa_id": 16, "klasa_nazwa": "4d", "przedmiot_nazwa": "j. angielski", "liczba_lekcji_tygodniowo": 3, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 16, "klasa_nazwa": "4d", "przedmiot_nazwa": "j. hiszpański", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 18, "nauczyciel_nazwisko": "Gabriel Marquez"},
+    {"klasa_id": 16, "klasa_nazwa": "4d", "przedmiot_nazwa": "chemia", "liczba_lekcji_tygodniowo": 6, "nauczyciel_id": 10, "nauczyciel_nazwisko": "Maria Skłodowska"},
+    {"klasa_id": 16, "klasa_nazwa": "4d", "przedmiot_nazwa": "biologia", "liczba_lekcji_tygodniowo": 6, "nauczyciel_id": 12, "nauczyciel_nazwisko": "Ludwik Hirszfeld"},
+    {"klasa_id": 16, "klasa_nazwa": "4d", "przedmiot_nazwa": "wf", "liczba_lekcji_tygodniowo": 2, "nauczyciel_id": 13, "nauczyciel_nazwisko": "Robert Lewandowski"},
+    {"klasa_id": 16, "klasa_nazwa": "4d", "przedmiot_nazwa": "l. wychowawcza", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 4, "nauczyciel_nazwisko": "Harold Pinter"},
+    {"klasa_id": 16, "klasa_nazwa": "4d", "przedmiot_nazwa": "WOS", "liczba_lekcji_tygodniowo": 1, "nauczyciel_id": 15, "nauczyciel_nazwisko": "Adam Bodnar"}
+]
 END
 
 REGUŁY:
@@ -384,11 +350,11 @@ Przykład: W sali chemicznej (czyli profilowej) może odbyć się lekcja WOS (bo
 
 Reguła 7: Przedmioty nieprofilowe preferują stałą salę dla każdej z klas.
 Interpretacja: Przedmioty nieprofilowe powinny mieć przypisaną stałą salę.
-Wyjątki: Jeśli stała sala nie jest dostępna, można użyć dowolnej iinej sali poza salą gimnastyczną.
+Wyjątki: Jeśli stała sala nie jest dostępna, można użyć dowolnej iinej sali poza salą o nazwie "WF".
 Przykład: J. polski, historia i matematyka to przedmioty profilowe więc dla klasy 3c priorytetem powinna być organizacja lekcji z tych przedmiotów w sali 402, ale jeśli nie jest to możliwe to można te lekcje zorganizować w innych salach (za zachowaniem reguły 6)
 
-Reguła 8: W sali o nazwie "sala gimnastyczna" mogą odbywać się wyłącznie lekcje WF.
-Przykład: w slocie 8:00-8:45 sala gimnastyczna jest wolna a matematyka potrzebuje sali ale poniewa w tej sali może odbywac się tylko WF to lekcje matekatyki w tej sali nie są dozwolone.
+Reguła 8: W sali o nazwie "WF" mogą odbywać się wyłącznie lekcje WF.
+Przykład: w slocie 8:00-8:45 sala "WF" jest wolna a matematyka potrzebuje sali ale poniewa w tej sali może odbywac się tylko WF to lekcje matekatyki w tej sali nie są dozwolone.
 
 Reguła 9: W jednym slocie czasowym (czyli w jednej godzinie lekcyjnej) w jednej sali może odbywać się dokładnie jedna lekcja, która spełnia jednocześnie wszystkie poniższe warunki:
     a) Dotyczy jednej klasy
@@ -424,11 +390,49 @@ END
 OPIS OCZEKIWANEJ ODPOWIEDZI:
 START
 Bardzo starannie przeanalizuj zbiory danych i reguły. To bardzo ważne.
-Wygeneruj harmonogram lekcji dla wszystkich klas pierwszych z uwzględnieniem powyższych reguł i danych.
-Harmonogram powinien obejmować tylko jeden dzień, np. poniedziałek i dla każdej klasy powinien zaangażować jak największą liczbę przedmiotów z jak największą liczbą nauczycieli.
+Wygeneruj harmonogram lekcji dla wszystkich klas pierwszych na cały tydzień z uwzględnieniem powyższych reguł i danych.
 Harmonogram posortuj wg. klasy i slotów czasowych.
-Po wygenerowaniu harmonogramu przedstaw go w postaci tabeli o następujących kolumnach: id dnia, godziny startu i końca lekcji, nazwa klasy, nazwa sali, nazwa przedmiotu, nazwisko nauczyciela.
+Po wygenerowaniu harmonogramu przedstaw go w formacie JSON o strukturze:
+[
+{
+"day": int,
+"startTime": string,
+"endTime": string,
+"cohort": string,
+"classroom": string,
+"subject": string,
+"nazwisko nauczyciela": string
+}
+]
+
+W JSON w poszczególnych polach umieść dane wg. schematu:
+ - "day" => "id" ze zbioru 'dni_tygodnia'
+ - "startTime" => "start_lekcji" ze zbioru 'sloty_czasowe'
+ - "endTime" => "koniec_lekcji" ze zbioru 'sloty_czasowe'
+ - "cohort" => "nazwa" ze zbioru 'klasy'
+ - "classroom" => "nazwa" ze zbioru 'sale'
+ - "subject" => "nazwa" ze zbioru 'przedmioty'
+ - "teacher" => "nazwisko" ze zbioru 'nauczyciele'
+
+Następnie przeanalizuj harmonogram pod kątem zgodności z wszystkimi regułami.
+Wyniki analizy zapisz ją w formacie JSON o strukturze:
+[
+{
+"nazwa reguły": string,
+"zgodność": bool,
+}
+]
+W przypadku zgodności harmonogramu z daną regułą, kluczowi "zgodność" przypisz wartość true, w przeciwnym przypadku wartośc false.
+
+Po zapisaniu analizy połącz harmonogram i wyniki analizy w jeden JSON o strukturze:
+[
+harmonogram: {},
+analiza: {},
+]
+Jako odpowiedź powinien zostać zwróony wyłącznie wynikowy, czysty JSON bez żadnych dodatkowych znaków.
+JSON sformatuj tak, aby w każdym obiekcie wszystkie pary klucz-wartość umieszczone były w jednym wierszu.
 END
+
 
 
 
@@ -459,7 +463,7 @@ TEST (udziel odpowiedzi w schemacie: treść pytania || odpowiedź na pytanie ||
 - czy fizyka jest przedmiotem profilowym?
 - czy lekcje fizyki mogą odbywać się w sali o nazwie "201"?
 - czy lekcje chemii mogą odbywać się w sali o nazwie "102"?
-- czy lekcje WOS mogą odbywać się w sali o nazwie "sala gimnastyczna"?
+- czy lekcje WOS mogą odbywać się w sali o nazwie "WF"?
 - do jakiego przedmiotu w różnych klasach przypisany jest nauczyciel Adam Mickiewicz?
 - w których klasach i jakiego przedmiotu naucza Marian Banach?
 - ile lekcji języka polskiego tygodniowo ma klasa 1a?
