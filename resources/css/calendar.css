@@ -43,3 +43,6 @@
   white-space: normal !important;
 }
 
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0em !important;
+}

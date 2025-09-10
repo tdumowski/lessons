@@ -25,35 +25,46 @@
    <!-- Main content -->
    <section class="content">
       <div class="container-fluid">
-
          <div class="row">
             <div class="col-sm-12">
-               <!-- text input -->
-               <div class="form-group">
-                  <label>Pytanie do chata</label>
-                  <textarea class="form-control" rows="10" id="chatQuestion"></textarea>
-                  {{-- <input type="text" class="form-control" placeholder="Wpisz swoje pytanie do chata AI" id="chatQuestion"> --}}
-               </div>
-            </div>
-         </div>
+               <div class="card">
+                  <div class="card-body">
+                     <div class="row">
+                        <div class="col-sm-12">
+                           <!-- text input -->
+                           <div class="form-group">
+                              <label>Pytanie do chata</label>
+                              <textarea class="form-control" rows="10" id="chatQuestion"></textarea>
+                              {{-- <input type="text" class="form-control" placeholder="Wpisz swoje pytanie do chata AI" id="chatQuestion"> --}}
+                           </div>
+                        </div>
+                     </div>
 
-         <div class="row">
-            <div class="col-sm-2">
-               <button type="button" id="btnChatTrigger" class="btn btn-block bg-gradient-primary btn-sm">Wyślij</button>
-            </div>
-         </div>
-         
-         <p></p>
-         <div class="row m-t-20">
-            <div class="col-sm-12">
-               <div class="form-group">
-                  <label>Odpowiedź chata</label>
-                  <textarea class="form-control" rows="25" disabled="" id="chatAnswer"></textarea>
+                     <div class="row">
+                        <div class="col-sm-2">
+                           <button type="button" id="btnChatTrigger" class="btn btn-block bg-gradient-primary btn-sm">Wyślij</button>
+                        </div>
+                     </div>
+                     
+                     <p></p>
+                     <div class="row m-t-20">
+                        <div class="col-sm-12">
+                           <div class="form-group">
+                              <label>Odpowiedź chata</label>
+                              <textarea class="form-control" rows="25" disabled="" id="chatAnswer"></textarea>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
                </div>
             </div>
          </div>
       </div><!--/. container-fluid -->
    </section>
+
+
+
+
     <!-- /.content -->
 
     @vite(['resources/js/queryGetChatAnswer.js'])
