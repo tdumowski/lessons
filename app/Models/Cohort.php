@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CohortSubjects extends Model
+class Cohort extends Model
 {
     //
 }
