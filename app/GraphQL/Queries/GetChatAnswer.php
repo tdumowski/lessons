@@ -17,7 +17,7 @@ define('BASEURL', 'https://api.deepseek.com');
 
 //ANTHROPIC CLAUDE
 // define('API_KEY', env("CHAT_API_KEY_CLAUDE")); // 🔐 Twój klucz API Claude
-// define('MODEL', 'claude-sonnet-4-0'); // lub np. claude-2.1
+// define('MODEL', 'claude-sonnet-4-0'); //  'claude-opus-4-1-20250805-thinking-16k'
 // define('BASEURL', 'https://api.anthropic.com/v1/messages');
 
 define('MAX_TOKENS', 1024); // Maksymalna liczba tokenów

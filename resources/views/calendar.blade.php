@@ -26,19 +26,29 @@
    <section class="content">
       <div class="container-fluid">
          <div class="row">
-               <div class="col-sm-2">
-                  <!-- select -->
-                  <div class="form-group">
-                     <label>Wybierz plan</label>
-                     <select class="custom-select">
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                        <option>option 5</option>
-                     </select>
-                  </div>
+            <div class="col-sm-2">
+               <!-- select -->
+               <div class="form-group">
+                  <label>Wybierz plan</label>
+                  <select class="custom-select">
+                     <option>option 1</option>
+                     <option>option 2</option>
+                     <option>option 3</option>
+                     <option>option 4</option>
+                     <option>option 5</option>
+                  </select>
                </div>
+            </div>
+
+            <div class="col-sm-8">
+            </div>
+
+            <div class="col-sm-2">
+               <div class="form-group">
+                  <label>Nowy plan</label>
+                  <button type="button" class="btn btn-block bg-gradient-info" id="btnGeneratePlan">Wygeneruj</button>
+               </div>
+            </div>
 
          </div>
          <div class="row">

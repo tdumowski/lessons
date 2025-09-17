@@ -42,7 +42,7 @@
 
                      <div class="row">
                         <div class="col-sm-2">
-                           <button type="button" id="btnChatTrigger" class="btn btn-block bg-gradient-primary btn-sm">Wyślij</button>
+                           <button type="button" id="btnChatTrigger" class="btn btn-block bg-gradient-info btn-sm">Wyślij</button>
                         </div>
                      </div>
                      
@@ -61,9 +61,6 @@
          </div>
       </div><!--/. container-fluid -->
    </section>
-
-
-
 
     <!-- /.content -->
 

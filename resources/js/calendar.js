@@ -5,6 +5,50 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 
 document.addEventListener('DOMContentLoaded', function () {
+
+
+  const btnGeneratePlan = document.getElementById('btnGeneratePlan');
+  
+  // Sprawdź, czy element istnieje
+  if (btnGeneratePlan) {
+    btnGeneratePlan.addEventListener('click', async () => {
+      
+      $(document).Toasts('create', {
+         title: 'Generowanie nowego planu rozpoczęte',
+         body: 'Po zapisaniu nowego planu otrzymasz maila',
+         position: 'bottomRight',
+         autohide: true,
+         icon: 'fas fa-check',
+         class: 'bg-success',
+         close: false,
+         delay: 5000
+      });
+
+      // Pobranie wartości z inputa
+      // document.getElementById('chatAnswer').value = 'Czekam na odpowiedź...';
+      // const question = document.getElementById('chatQuestion').value;
+
+      // try {
+      //   // Wysłanie zapytania GraphQL z input jako obiektem
+      //   const { data } = await client.query({
+      //     query: CHAT_QUERY,
+      //     variables: { input: { prompt: question } }
+      //   });
+
+      //   // Wyświetlenie odpowiedzi w textarea
+      //   const answer = data.getChatAnswer;
+      //   document.getElementById('chatAnswer').value = answer;
+      // } catch (error) {
+      //   console.error('Błąd podczas wysyłania zapytania GraphQL:', error);
+      //   document.getElementById('chatAnswer').value = 'Wystąpił błąd podczas pobierania odpowiedzi.';
+      // }
+    });
+  }
+
+
+
+
+
    const calendarEl = document.getElementById('calendar');
 
    if (calendarEl) {
