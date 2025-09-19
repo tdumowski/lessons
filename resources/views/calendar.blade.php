@@ -26,21 +26,28 @@
    <section class="content">
       <div class="container-fluid">
          <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-3">
                <!-- select -->
                <div class="form-group">
                   <label>Wybierz plan</label>
-                  <select class="custom-select">
-                     <option>option 1</option>
+                  <select class="custom-select" id="lstPlans">
+                     {{-- <option>option 1</option>
                      <option>option 2</option>
                      <option>option 3</option>
                      <option>option 4</option>
-                     <option>option 5</option>
+                     <option>option 5</option> --}}
                   </select>
                </div>
             </div>
 
-            <div class="col-sm-8">
+            <div class="col-sm-1">
+               <div class="form-group">
+                  <label>odśwież</label>
+                  <button type="button" class="btn btn-block bg-gradient-info" id="btnRefreshPlans"><i class="fas fa-sync-alt"></i></button>
+               </div>
+            </div>
+
+            <div class="col-sm-6">
             </div>
 
             <div class="col-sm-2">

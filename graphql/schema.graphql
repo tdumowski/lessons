@@ -1,17 +1,30 @@
 scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
 
+type Mutation {
+  	createPlan: Boolean
+  	@field(resolver: "App\\GraphQL\\Mutations\\CreatePlan")
+}
+
 type Query {
   	hello: String
   	@field(resolver: "App\\GraphQL\\Queries\\HelloQuery")
 
   	getChatAnswer(input: chatQuestion): String
   	@field(resolver: "App\\GraphQL\\Queries\\GetChatAnswer")
+
+  	getPlans: [Plan!]!
+  	@field(resolver: "App\\GraphQL\\Queries\\GetPlans")
 }
 
 input chatQuestion {
 	prompt: String!
 }
 
+type Plan {
+	id: Int!
+	name: String!
+	created_at: String!
+}
 
 
 # "A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."

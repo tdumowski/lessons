@@ -4,52 +4,175 @@ import interactionPlugin from '@fullcalendar/interaction';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
 
+import { ApolloClient, InMemoryCache, HttpLink, gql } from '@apollo/client';
+
 document.addEventListener('DOMContentLoaded', function () {
 
-
-  const btnGeneratePlan = document.getElementById('btnGeneratePlan');
+   const calendarEl = document.getElementById('calendar');
+   const btnGeneratePlan = document.getElementById('btnGeneratePlan');
+   const btnRefreshPlans = document.getElementById('btnRefreshPlans');
+   const lstPlans = document.getElementById('lstPlans');
   
-  // Sprawdź, czy element istnieje
-  if (btnGeneratePlan) {
-    btnGeneratePlan.addEventListener('click', async () => {
-      
-      $(document).Toasts('create', {
-         title: 'Generowanie nowego planu rozpoczęte',
-         body: 'Po zapisaniu nowego planu otrzymasz maila',
-         position: 'bottomRight',
-         autohide: true,
-         icon: 'fas fa-check',
-         class: 'bg-success',
-         close: false,
-         delay: 5000
+   // Inicjalizacja Apollo Client z HttpLink
+   const client = new ApolloClient({
+      link: new HttpLink({
+         uri: '/graphql', // Endpoint GraphQL w Twojej aplikacji Laravel
+      }),
+      cache: new InMemoryCache()
+   });
+
+   // btnGeneratePlan -> MUTATION: CreatePlan
+   if (btnGeneratePlan) {
+
+      btnGeneratePlan.addEventListener('click', async () => {
+         btnGeneratePlan.disabled = true;
+
+         // Definicja zapytania GraphQL
+         const MUTATION_CREATE_PLAN = gql`
+            mutation CreatePlan {
+               createPlan
+            }
+         `;
+
+      try {
+         // Wysłanie zapytania GraphQL z input jako obiektem
+         const { data } = await client.mutate({
+            mutation: MUTATION_CREATE_PLAN,
+            // variables: { input: { prompt: question } }
+         });
+
+         const createdPlan = data.createPlan;
+
+         if(createdPlan) {
+            $(document).Toasts('create', {
+               title: 'Generowanie nowego planu rozpoczęte',
+               body: 'Po zapisaniu nowego planu otrzymasz maila',
+               position: 'bottomRight',
+               autohide: true,
+               icon: 'fas fa-check',
+               class: 'bg-success',
+               close: false,
+               delay: 5000
+            });
+         }
+         else {
+            $(document).Toasts('create', {
+               title: 'BŁĄD generowania nowego planu',
+               body: 'Spróbuj ponownie lub skontaktuj się z adminem',
+               position: 'bottomRight',
+               autohide: true,
+               icon: 'fas fa-exclamation-triangle',
+               class: 'bg-danger',
+               close: false,
+               delay: 5000
+            });
+         }
+      } 
+      catch (error) {
+         
+
+         $(document).Toasts('create', {
+            title: 'BŁĄD generowania nowego planu',
+            body: 'Spróbuj ponownie lub skontaktuj się z adminem',
+            position: 'bottomRight',
+            autohide: true,
+            icon: 'fas fa-exclamation-triangle',
+            class: 'bg-danger',
+            close: false,
+            delay: 5000
+         });
+
+         console.error('Błąd podczas wysyłania zapytania GraphQL:', error);
+         }
       });
 
-      // Pobranie wartości z inputa
-      // document.getElementById('chatAnswer').value = 'Czekam na odpowiedź...';
-      // const question = document.getElementById('chatQuestion').value;
+      btnGeneratePlan.disabled = false;
+   }
+  
+   // btnRefreshPlans -> MUTATION: GetPlans
+   if (btnRefreshPlans && lstPlans) {
+      btnRefreshPlans.addEventListener('click', async () => {
+         btnRefreshPlans.disabled = true;
 
-      // try {
-      //   // Wysłanie zapytania GraphQL z input jako obiektem
-      //   const { data } = await client.query({
-      //     query: CHAT_QUERY,
-      //     variables: { input: { prompt: question } }
-      //   });
+         // Definicja zapytania GraphQL
+         const QUERY_GET_PLANS = gql`
+            query GetPlans {
+               getPlans{
+                  id
+                  name
+                  created_at
+               }
+            }
+         `;
 
-      //   // Wyświetlenie odpowiedzi w textarea
-      //   const answer = data.getChatAnswer;
-      //   document.getElementById('chatAnswer').value = answer;
-      // } catch (error) {
-      //   console.error('Błąd podczas wysyłania zapytania GraphQL:', error);
-      //   document.getElementById('chatAnswer').value = 'Wystąpił błąd podczas pobierania odpowiedzi.';
-      // }
-    });
-  }
+         try {
+            // Wysłanie zapytania GraphQL z input jako obiektem
+            const { data } = await client.query({
+               query: QUERY_GET_PLANS,
+               // variables: { input: { prompt: question } }
+            });
+
+            const plans = data.getPlans;
+
+            if(plans) {
+               lstPlans.innerHTML = null;
+
+               for (let i = 0; i < plans.length; i++) {
+                  let plan = plans[i];
+                  let el = document.createElement("option");
+                  el.textContent = plan.name + " (" + plan.created_at + ")";
+                  el.value = plan.id;
+                  lstPlans.appendChild(el);
+               }
+
+               $(document).Toasts('create', {
+                  title: 'Zapisane plany pobrane z bazy',
+                  body: 'Możesz przeglądać istniejące plany',
+                  position: 'bottomRight',
+                  autohide: true,
+                  icon: 'fas fa-check',
+                  class: 'bg-success',
+                  close: false,
+                  delay: 5000
+               });
+            }
+            else {
+               $(document).Toasts('create', {
+                  title: 'BŁĄD pobierania planów z bazy',
+                  body: 'Spróbuj ponownie lub skontaktuj się z adminem',
+                  position: 'bottomRight',
+                  autohide: true,
+                  icon: 'fas fa-exclamation-triangle',
+                  class: 'bg-danger',
+                  close: false,
+                  delay: 5000
+               });
+            }
+         } 
+         catch (error) {
+            $(document).Toasts('create', {
+               title: 'BŁĄD pobierania planów z bazy',
+               body: 'Spróbuj ponownie lub skontaktuj się z adminem',
+               position: 'bottomRight',
+               autohide: true,
+               icon: 'fas fa-exclamation-triangle',
+               class: 'bg-danger',
+               close: false,
+               delay: 5000
+            });
+
+            console.error('Błąd podczas wysyłania zapytania GraphQL:', error);
+         }
+
+         btnRefreshPlans.disabled = false;
+      });
+   }
 
 
 
 
 
-   const calendarEl = document.getElementById('calendar');
+   
 
    if (calendarEl) {
       //ograniczenie przełączanych dat
@@ -577,5 +700,3 @@ function getDateForWeekday(dayNumber, referenceDate = new Date()) {
 
   return targetDate.toISOString().split('T')[0]; // YYYY-MM-DD
 }
-
-
