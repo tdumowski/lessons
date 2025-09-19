@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ChatRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -31,10 +32,13 @@ class JobCreatePlan implements ShouldQueue
      */
     public function handle(): void
     {
+        $chatAnswer = ChatRepository::getChatAnswer("Jak w języku angielskim rozwija się skrót USA?");
+
         $plan = new Plan();
         $plan->school_id = $this->user->school->id;
         $plan->season_id = Season::where("status", "ACTIVE")->first()->id;
-        $plan->name = Carbon::now()->timezone('Europe/Warsaw')->format('Y-m-d H:i');;
+        $plan->name = Carbon::now()->timezone('Europe/Warsaw')->format('Y-m-d H:i');
+        $plan->source = $chatAnswer;
         $plan->created_by = $this->user->id;
         $plan->save();
     }
