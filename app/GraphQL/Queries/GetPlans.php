@@ -16,7 +16,7 @@ final readonly class GetPlans
         $user = User::find(1);
 
         $plans = Plan
-            ::where("school_id", 1)
+            ::where("school_id", $user->school->id)
             ->where("status", "ACTIVE")
             ->where("season_id", Season::where("status", "ACTIVE")->first()->id)
             ->orderBy("created_at", "DESC")

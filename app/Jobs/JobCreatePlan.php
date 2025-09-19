@@ -32,7 +32,7 @@ class JobCreatePlan implements ShouldQueue
     public function handle(): void
     {
         $plan = new Plan();
-        $plan->school_id = 1;
+        $plan->school_id = $this->user->school->id;
         $plan->season_id = Season::where("status", "ACTIVE")->first()->id;
         $plan->name = Carbon::now()->timezone('Europe/Warsaw')->format('Y-m-d H:i');;
         $plan->created_by = $this->user->id;
