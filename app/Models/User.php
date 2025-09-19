@@ -52,10 +52,10 @@ class User extends Authenticatable
         return $this->hasOneThrough(
             School::class, // Final model
             UserSchool::class, // Intermediate model
-            "user_id",
+            "user_id", //current model's id in Intermediate model
             "id",
             "id",
-            "school_id"
+            "school_id" //final model's id in Intermediate model
         );
     }
 }
