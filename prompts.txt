@@ -351,7 +351,7 @@ Przykład: W sali chemicznej (czyli profilowej) może odbyć się lekcja WOS (bo
 Reguła 7: Przedmioty nieprofilowe preferują stałą salę dla każdej z klas.
 Interpretacja: Każda klasa ma przypisaną stała salę (pole "sala_id" w zbiorze "klasy").
 Wyjątki: Lekcje z każdego przedmiotu nieprofilowego dla każdej klasy powinny odbywać się w przypisanej do danej klasy sali.
-Przykład: J. polski, historia i matematyka to przedmioty nieprofilowe więc dla klasy 3c priorytetem powinna być organizacja lekcji z tych przedmiotów w sali 402
+Przykład: J. polski, historia i matematyka to przedmioty nieprofilowe więc dla klasy 3c te lekcje organizowane powinny być wyąłcznie w sali 402 (o ile ta sala jest przypisana do tej klasy).
 
 Reguła 8: W sali o nazwie "WF" mogą odbywać się wyłącznie lekcje WF.
 
