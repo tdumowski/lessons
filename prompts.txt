@@ -51,22 +51,22 @@ END
 ZBIORY DANYCH:
 START
 klasy: [
-  { "id": 1, "rocznik": 1, "grupa": "a", "nazwa": "1a" },
-  { "id": 2, "rocznik": 1, "grupa": "b", "nazwa": "1b" },
-  { "id": 3, "rocznik": 1, "grupa": "c", "nazwa": "1c" },
-  { "id": 4, "rocznik": 1, "grupa": "d", "nazwa": "1d" },
-  { "id": 5, "rocznik": 2, "grupa": "a", "nazwa": "2a" },
-  { "id": 6, "rocznik": 2, "grupa": "b", "nazwa": "2b" },
-  { "id": 7, "rocznik": 2, "grupa": "c", "nazwa": "2c" },
-  { "id": 8, "rocznik": 2, "grupa": "d", "nazwa": "2d" },
-  { "id": 9, "rocznik": 3, "grupa": "a", "nazwa": "3a" },
-  { "id": 10, "rocznik": 3, "grupa": "b", "nazwa": "3b" },
-  { "id": 11, "rocznik": 3, "grupa": "c", "nazwa": "3c" },
-  { "id": 12, "rocznik": 3, "grupa": "d", "nazwa": "3d" },
-  { "id": 13, "rocznik": 4, "grupa": "a", "nazwa": "4a" },
-  { "id": 14, "rocznik": 4, "grupa": "b", "nazwa": "4b" },
-  { "id": 15, "rocznik": 4, "grupa": "c", "nazwa": "4c" },
-  { "id": 16, "rocznik": 4, "grupa": "d", "nazwa": "4d" }
+  { "id": 1, "rocznik": 1, "grupa": "a", "nazwa": "1a", sala_id: 6 },
+  { "id": 2, "rocznik": 1, "grupa": "b", "nazwa": "1b", sala_id: 7 },
+  { "id": 3, "rocznik": 1, "grupa": "c", "nazwa": "1c", sala_id: 8 },
+  { "id": 4, "rocznik": 1, "grupa": "d", "nazwa": "1d", sala_id: 9 },
+  { "id": 5, "rocznik": 2, "grupa": "a", "nazwa": "2a", sala_id: 10 },
+  { "id": 6, "rocznik": 2, "grupa": "b", "nazwa": "2b", sala_id: 11 },
+  { "id": 7, "rocznik": 2, "grupa": "c", "nazwa": "2c", sala_id: 12 },
+  { "id": 8, "rocznik": 2, "grupa": "d", "nazwa": "2d", sala_id: 13 },
+  { "id": 9, "rocznik": 3, "grupa": "a", "nazwa": "3a", sala_id: 14 },
+  { "id": 10, "rocznik": 3, "grupa": "b", "nazwa": "3b", sala_id: 15 },
+  { "id": 11, "rocznik": 3, "grupa": "c", "nazwa": "3c", sala_id: 16 },
+  { "id": 12, "rocznik": 3, "grupa": "d", "nazwa": "3d", sala_id: 17 },
+  { "id": 13, "rocznik": 4, "grupa": "a", "nazwa": "4a", sala_id: 18 },
+  { "id": 14, "rocznik": 4, "grupa": "b", "nazwa": "4b", sala_id: 19 },
+  { "id": 15, "rocznik": 4, "grupa": "c", "nazwa": "4c", sala_id: 20 },
+  { "id": 16, "rocznik": 4, "grupa": "d", "nazwa": "4d", sala_id: 21 }
 ]
 
 dni_tygodnia: [
@@ -349,12 +349,11 @@ Ograniczenie: Nie można w niej prowadzić innych przedmiotów profilowych.
 Przykład: W sali chemicznej (czyli profilowej) może odbyć się lekcja WOS (bo WOS nie ma przypisanej żadnej sali więc jest przedmioten nieprofilowym), ale nie fizyki (bo do fizyki przypisana jest inna pracownia więc jest przedmiotem profilowym).
 
 Reguła 7: Przedmioty nieprofilowe preferują stałą salę dla każdej z klas.
-Interpretacja: Przedmioty nieprofilowe powinny mieć przypisaną stałą salę.
-Wyjątki: Jeśli stała sala nie jest dostępna, można użyć dowolnej iinej sali poza salą o nazwie "WF".
-Przykład: J. polski, historia i matematyka to przedmioty profilowe więc dla klasy 3c priorytetem powinna być organizacja lekcji z tych przedmiotów w sali 402, ale jeśli nie jest to możliwe to można te lekcje zorganizować w innych salach (za zachowaniem reguły 6)
+Interpretacja: Każda klasa ma przypisaną stała salę (pole "sala_id" w zbiorze "klasy").
+Wyjątki: Lekcje z każdego przedmiotu nieprofilowego dla każdej klasy powinny odbywać się w przypisanej do danej klasy sali.
+Przykład: J. polski, historia i matematyka to przedmioty nieprofilowe więc dla klasy 3c priorytetem powinna być organizacja lekcji z tych przedmiotów w sali 402
 
 Reguła 8: W sali o nazwie "WF" mogą odbywać się wyłącznie lekcje WF.
-Przykład: w slocie 8:00-8:45 sala "WF" jest wolna a matematyka potrzebuje sali ale poniewa w tej sali może odbywac się tylko WF to lekcje matekatyki w tej sali nie są dozwolone.
 
 Reguła 9: W jednym slocie czasowym (czyli w jednej godzinie lekcyjnej) w jednej sali może odbywać się dokładnie jedna lekcja, która spełnia jednocześnie wszystkie poniższe warunki:
     a) Dotyczy jednej klasy
@@ -375,7 +374,7 @@ Przykład: Klasa 1a nie może mieć matematyki i historii we wtorek o 10:45.
 Reguła 12: Dla danej klasy maksymalnie 2 lekcje tego samego przedmiotu dziennie.
 Przykład: Jeśli klasa 1c ma przewidziane 3 lekcje fizyki w tygodniu to może mieć po jednej lekcji fizyki w poniedziałek, we wtorek i czwartek lub 1 lekcję w poniedziałek i 2 lekcje w czwartek. 3 lub więcej lekcji fizyki dla klasy 1c w jednym dniu jest niedozwolone.
 
-Reguła 13: Jeśli dla danej klasie zostały zaplanowane dwie lekcje tego samego przedmiotu to muszą odbyć się w tej samej sali i w kolejnych slotach.
+Reguła 13: Jeśli danego dnia dla danej klasy zostały zaplanowane dwie lekcje tego samego przedmiotu to muszą odbyć się w kolejno następujących po sobie slotach.
 Interpretacja: Dwie lekcje tego samego przedmiotu dla danej klasy tego samego dnia muszą na równi spełnić poniższe warunki:
     a) Muszą być w tej samej sali.
     b) Muszą być w bezpośrednio następujących slotach.
