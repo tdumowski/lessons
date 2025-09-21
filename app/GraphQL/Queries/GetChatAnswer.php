@@ -6,6 +6,12 @@ namespace App\GraphQL\Queries;
 use App\Models\Classroom;
 use Illuminate\Support\Facades\DB;
 use App\Models\Cohort;
+use App\Models\CohortSubject;
+use App\Models\Season;
+use App\Models\Subject;
+use App\Models\Teacher;
+use App\Models\Timeslot;
+use App\Models\Weekday;
 
 // use Illuminate\Support\Facades\Auth;
 
@@ -38,37 +44,137 @@ final readonly class GetChatAnswer
         set_time_limit(180);
 
         //COHORTS
-        // $chatAnswer = Cohort::where("status", "ACTIVE")->get();
+        // $season = Season::where("status", "ACTIVE")->first();
+        
+        // if($season) {
+        //     $chatAnswer = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->get();
 
-        // $chatAnswer = $chatAnswer->map(function ($cochort) {
-        //     return [
-        //         'id'    => $cochort->id,
-        //         'rocznik'  => $cochort->level,
-        //         'grupa' => $cochort->line,
-        //         'nazwa' => $cochort->level.$cochort->line,
-        //         'sala_id' => $cochort->classroom_id,
-        //     ];
-        // })->toJson();
+        //     $chatAnswer = "klasy: " . $chatAnswer->map(function ($cochort) {
+        //         return [
+        //             'id'    => $cochort->id,
+        //             'rocznik'  => $cochort->level,
+        //             'grupa' => $cochort->line,
+        //             'nazwa' => $cochort->level.$cochort->line,
+        //             'sala_id' => $cochort->classroom_id,
+        //         ];
+        //     })->toJson(JSON_UNESCAPED_UNICODE);
+        // }
+        // else {
+        //     $chatAnswer = null;
+        // }
     //END: COHORTS
 
-        //COHORTS
-        $chatAnswer = Classroom::where("status", "ACTIVE")->where("school_id", 1)->get();
+        //CLASSROOMS
+        // $chatAnswer = Classroom::where("status", "ACTIVE")->where("school_id", 1)->get();
 
-        $chatAnswer = $chatAnswer->map(function ($classroom) {
-            return collect([
-                'id'     => $classroom->id,
-                'piętro' => $classroom->floor,
-                'nazwa'  => $classroom->name,
-            ])->when($classroom->subjects->isNotEmpty(), function ($collection) use ($classroom) {
-                $collection['przedmioty'] = $classroom->subjects->map(function ($subject) {
-                    return [
-                        'przedmiot_id'    => $subject->id,
-                        'przedmiot_nazwa' => $subject->name,
-                    ];
-                })->values()->all();
-            })->all();
-        })->toJson(JSON_UNESCAPED_UNICODE);
-        //END: COHORTS
+        // $chatAnswer = "sale: " . $chatAnswer->map(function ($classroom) {
+        //     return collect([
+        //         'id'     => $classroom->id,
+        //         'piętro' => $classroom->floor,
+        //         'nazwa'  => $classroom->name,
+        //     ])->when($classroom->subjects->isNotEmpty(), function ($collection) use ($classroom) {
+        //         $collection['przedmioty'] = $classroom->subjects->map(function ($subject) {
+        //             return [
+        //                 'przedmiot_id'    => $subject->id,
+        //                 'przedmiot_nazwa' => $subject->name,
+        //             ];
+        //         })->values()->all();
+        //     })->all();
+        // })->toJson(JSON_UNESCAPED_UNICODE);
+        //END: CLASSROOMS
+
+        //WEEKDAYS
+        // $chatAnswer = Weekday::all();
+
+        // $chatAnswer = "dni_tygodnia: " . $chatAnswer->map(function ($weekday) {
+        //     return [
+        //         'id'    => $weekday->id,
+        //         'nazwa' => $weekday->name,
+        //     ];
+        // })->toJson(JSON_UNESCAPED_UNICODE);
+        //END: WEEKDAYS
+
+        //TIMESLOTS
+        // $chatAnswer = Timeslot::where("status", "ACTIVE")->where("school_id", 1)->get();
+
+        // $chatAnswer = "sloty_czasowe: " . $chatAnswer->map(function ($timeslot) {
+        //     return [
+        //         'id'    => $timeslot->id,
+        //         'start_lekcji' => $timeslot->start,
+        //         'koniec_lekcji' => $timeslot->end,
+        //     ];
+        // })->toJson(JSON_UNESCAPED_UNICODE);
+        //END: TIMESLOTS
+
+        //SUBJECTS
+        // $chatAnswer = Subject::where("status", "ACTIVE")->where("school_id", 1)->get();
+
+        // $chatAnswer = "przedmioty: " . $chatAnswer->map(function ($subject) {
+        //     return [
+        //         'id'    => $subject->id,
+        //         'nazwa' => $subject->name,
+        //     ];
+        // })->toJson(JSON_UNESCAPED_UNICODE);
+        //END: SUBJECTS
+
+        //TEACHERS
+        // $chatAnswer = Teacher::where("status", "ACTIVE")->where("school_id", 1)->get();
+
+        // $chatAnswer = "nauczyciele: " . $chatAnswer->map(function ($teacher) {
+        //     return [
+        //         'id'    => $teacher->id,
+        //         'nazwisko' => $teacher->first_name . " " . $teacher->last_name,
+        //     ];
+        // })->toJson(JSON_UNESCAPED_UNICODE);
+        //END: TEACHERS
+
+        //COHORT_SUBJECTS
+        // $chatAnswer = CohortSubject::where("status", "ACTIVE")->where("school_id", 1)->get();
+
+        // $chatAnswer = "nauczyciele: " . $chatAnswer->map(function ($teacher) {
+        //     return [
+        //         'id'    => $teacher->id,
+        //         'nazwisko' => $teacher->first_name . " " . $teacher->last_name,
+        //     ];
+        // })->toJson(JSON_UNESCAPED_UNICODE);
+        //END: COHORT_SUBJECTS
+
+        //COHORT_SUBJECTS
+        // $season = Season::where("status", "ACTIVE")->first();
+        
+        // if($season) {
+        //     $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->pluck("id")->toArray();
+
+        //     if($cohorts) {
+        //         $chatAnswer = CohortSubject::where("status", "ACTIVE")->whereIn("cohort_id", $cohorts)->get();
+
+        //         $chatAnswer = "klasy_przedmioty: " . $chatAnswer->map(function ($cohortSubject) {
+        //             return [
+        //                 'klasa_id' => $cohortSubject->cohort_id,
+        //                 'klasa_nazwa' => $cohortSubject->cohort_level . $cohortSubject->cohort_line,
+        //                 'przedmiot_id' => $cohortSubject->subject_id,
+        //                 'przedmiot_nazwa' => $cohortSubject->subject->name,
+        //                 'liczba_lekcji_tygodniowo' => $cohortSubject->amount,
+        //                 'nauczyciel_id' => $cohortSubject->teacher_id,
+        //                 'nauczyciel_nazwisko' => $cohortSubject->teacher->first_name . " " . $cohortSubject->teacher->last_name,
+        //             ];
+        //         })->toJson(JSON_UNESCAPED_UNICODE);
+        //     }
+        //     else {
+        //         $chatAnswer = "error 1";
+        //     }
+        // }
+        // else {
+        //     $chatAnswer = "error 2";
+        // }
+        //END: COHORT_SUBJECTS
+
+
+
+
+
+
+
 
 
 
