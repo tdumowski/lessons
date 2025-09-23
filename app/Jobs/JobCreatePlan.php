@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\ChatRepository;
+use App\Models\Cohort;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -32,6 +33,21 @@ class JobCreatePlan implements ShouldQueue
      */
     public function handle(): void
     {
+
+        //1: get cohorts from user's school
+        $season = Season::where("status", "ACTIVE")->first();
+        if(!$season) {
+            return;
+        }
+
+        $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->get();
+
+        foreach ($cohorts as $cohort) {
+            //get prompt
+            
+        }
+
+
         $chatAnswer = ChatRepository::getChatAnswer("Jak w języku angielskim rozwija się skrót USA?");
 
         $plan = new Plan();
