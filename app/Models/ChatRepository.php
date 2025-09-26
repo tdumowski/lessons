@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 //GOOGLE GEMINI
-// define('API_KEY', env("CHAT_API_KEY_GEMINI")); // 🔐 Wklej swój klucz
-// define('MODEL', 'gemini-2.0-flash'); // lub np. 'gemini-1.5-flash'
-// define('BASEURL', 'https://generativelanguage.googleapis.com/v1');
+define('API_KEY', env("CHAT_API_KEY_GEMINI")); // 🔐 Wklej swój klucz
+define('MODEL', 'gemini-2.0-flash'); // lub np. 'gemini-1.5-flash'
+define('BASEURL', 'https://generativelanguage.googleapis.com/v1');
 
 //DEEPSEEK
-define('API_KEY', env("CHAT_API_KEY_DEEPSEEK")); // 🔐 Wklej swój klucz
-define('MODEL', 'deepseek-chat'); // lub 'deepseek-reasoner'
-define('BASEURL', 'https://api.deepseek.com');
+// define('API_KEY', env("CHAT_API_KEY_DEEPSEEK")); // 🔐 Wklej swój klucz
+// define('MODEL', 'deepseek-chat'); // lub 'deepseek-reasoner'
+// define('BASEURL', 'https://api.deepseek.com');
 
 //ANTHROPIC CLAUDE
 // define('API_KEY', env("CHAT_API_KEY_CLAUDE")); // 🔐 Twój klucz API Claude

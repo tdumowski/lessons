@@ -7,6 +7,7 @@ use App\Models\Classroom;
 use Illuminate\Support\Facades\DB;
 use App\Models\Cohort;
 use App\Models\CohortSubject;
+use App\Models\LogRepository;
 use App\Models\Season;
 use App\Models\Subject;
 use App\Models\Teacher;
@@ -21,14 +22,14 @@ use App\Models\Weekday;
 // define('BASEURL', 'https://generativelanguage.googleapis.com/v1');
 
 //DEEPSEEK
-define('API_KEY', env("CHAT_API_KEY_DEEPSEEK")); // 🔐 Wklej swój klucz
-define('MODEL', 'deepseek-chat'); // lub 'deepseek-reasoner'
-define('BASEURL', 'https://api.deepseek.com');
+// define('API_KEY', env("CHAT_API_KEY_DEEPSEEK")); // 🔐 Wklej swój klucz
+// define('MODEL', 'deepseek-chat'); // lub 'deepseek-reasoner'
+// define('BASEURL', 'https://api.deepseek.com');
 
 //ANTHROPIC CLAUDE
-// define('API_KEY', env("CHAT_API_KEY_CLAUDE")); // 🔐 Twój klucz API Claude
-// define('MODEL', 'claude-sonnet-4-0'); //  'claude-opus-4-1-20250805-thinking-16k'
-// define('BASEURL', 'https://api.anthropic.com/v1/messages');
+define('API_KEY', env("CHAT_API_KEY_CLAUDE")); // 🔐 Twój klucz API Claude
+define('MODEL', 'claude-sonnet-4-0'); //  'claude-opus-4-1-20250805-thinking-16k'
+define('BASEURL', 'https://api.anthropic.com/v1/messages');
 
 define('MAX_TOKENS', 1024); // Maksymalna liczba tokenów
 define('CACHE_DIR', '/tmp/cache/'); // 📂 Katalog do przechowywania cache
@@ -43,305 +44,171 @@ final readonly class GetChatAnswer
     {
         set_time_limit(180);
 
-        //COHORTS
-        // $season = Season::where("status", "ACTIVE")->first();
-        
-        // if($season) {
-        //     $chatAnswer = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->get();
+        LogRepository::saveLogFile("chat", "MODEL:\n".$chatAnswer);
 
-        //     $chatAnswer = "klasy: " . $chatAnswer->map(function ($cochort) {
-        //         return [
-        //             'id'    => $cochort->id,
-        //             'rocznik'  => $cochort->level,
-        //             'grupa' => $cochort->line,
-        //             'nazwa' => $cochort->level.$cochort->line,
-        //             'sala_id' => $cochort->classroom_id,
-        //         ];
-        //     })->toJson(JSON_UNESCAPED_UNICODE);
-        // }
-        // else {
-        //     $chatAnswer = null;
-        // }
-    //END: COHORTS
+        $prompt = $args["input"]["prompt"];
+        $temperature = isset($args["input"]["temperature"]) ? (float)$args["input"]["temperature"] : TEMPERATURE; // Dynamiczna temperatura z argumentów lub domyślna
 
-        //CLASSROOMS
-        // $chatAnswer = Classroom::where("status", "ACTIVE")->where("school_id", 1)->get();
+        $cacheKey = md5($prompt . '|' . $temperature); // 🔑 Generujemy unikalny klucz na podstawie promptu
 
-        // $chatAnswer = "sale: " . $chatAnswer->map(function ($classroom) {
-        //     return collect([
-        //         'id'     => $classroom->id,
-        //         'piętro' => $classroom->floor,
-        //         'nazwa'  => $classroom->name,
-        //     ])->when($classroom->subjects->isNotEmpty(), function ($collection) use ($classroom) {
-        //         $collection['przedmioty'] = $classroom->subjects->map(function ($subject) {
-        //             return [
-        //                 'przedmiot_id'    => $subject->id,
-        //                 'przedmiot_nazwa' => $subject->name,
-        //             ];
-        //         })->values()->all();
-        //     })->all();
-        // })->toJson(JSON_UNESCAPED_UNICODE);
-        //END: CLASSROOMS
+        $cacheKey = md5($prompt); // 🔑 Generujemy unikalny klucz na podstawie promptu
+        $cacheFile = CACHE_DIR . $cacheKey . '.cache';
 
-        //WEEKDAYS
-        // $chatAnswer = Weekday::all();
+        $modelShortName = substr(MODEL, 0, 6);
+        if($modelShortName == "gemini") {
+            $url = BASEURL . "/models/" . MODEL . ":generateContent?key=" . API_KEY;
 
-        // $chatAnswer = "dni_tygodnia: " . $chatAnswer->map(function ($weekday) {
-        //     return [
-        //         'id'    => $weekday->id,
-        //         'nazwa' => $weekday->name,
-        //     ];
-        // })->toJson(JSON_UNESCAPED_UNICODE);
-        //END: WEEKDAYS
+            $data = [
+                "contents" => [
+                    [
+                        "parts" => [
+                            ["text" => $prompt]
+                        ]
+                    ]
+                ]
+            ];
 
-        //TIMESLOTS
-        // $chatAnswer = Timeslot::where("status", "ACTIVE")->where("school_id", 1)->get();
+            $jsonData = json_encode($data);
 
-        // $chatAnswer = "sloty_czasowe: " . $chatAnswer->map(function ($timeslot) {
-        //     return [
-        //         'id'    => $timeslot->id,
-        //         'start_lekcji' => $timeslot->start,
-        //         'koniec_lekcji' => $timeslot->end,
-        //     ];
-        // })->toJson(JSON_UNESCAPED_UNICODE);
-        //END: TIMESLOTS
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
 
-        //SUBJECTS
-        // $chatAnswer = Subject::where("status", "ACTIVE")->where("school_id", 1)->get();
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-        // $chatAnswer = "przedmioty: " . $chatAnswer->map(function ($subject) {
-        //     return [
-        //         'id'    => $subject->id,
-        //         'nazwa' => $subject->name,
-        //     ];
-        // })->toJson(JSON_UNESCAPED_UNICODE);
-        //END: SUBJECTS
+            $responseArray = json_decode($response, true);
 
-        //TEACHERS
-        // $chatAnswer = Teacher::where("status", "ACTIVE")->where("school_id", 1)->get();
+            if (!isset($responseArray['candidates'][0]['content']['parts'][0]['text'])) {
+                return "Brak odpowiedzi lub błąd.";
+            }
 
-        // $chatAnswer = "nauczyciele: " . $chatAnswer->map(function ($teacher) {
-        //     return [
-        //         'id'    => $teacher->id,
-        //         'nazwisko' => $teacher->first_name . " " . $teacher->last_name,
-        //     ];
-        // })->toJson(JSON_UNESCAPED_UNICODE);
-        //END: TEACHERS
+            $chatAnswer = $responseArray['candidates'][0]['content']['parts'][0]['text'];
+        }
+        else if($modelShortName == "deepse") {
+            // 🟢 Sprawdzamy, czy odpowiedź jest w cache (cache hit)
+            if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < CACHE_TTL) {
+                $chatAnswer = file_get_contents($cacheFile);
+                if ($chatAnswer !== false) {
+                    return $chatAnswer; // Cache hit
+                }
+            }
 
-        //COHORT_SUBJECTS
-        // $chatAnswer = CohortSubject::where("status", "ACTIVE")->where("school_id", 1)->get();
+            // 🔴 Cache miss - wysyłamy żądanie do API
+            $url = BASEURL . "/chat/completions";
 
-        // $chatAnswer = "nauczyciele: " . $chatAnswer->map(function ($teacher) {
-        //     return [
-        //         'id'    => $teacher->id,
-        //         'nazwisko' => $teacher->first_name . " " . $teacher->last_name,
-        //     ];
-        // })->toJson(JSON_UNESCAPED_UNICODE);
-        //END: COHORT_SUBJECTS
+            $data = [
+                "model" => MODEL,
+                "messages" => [
+                    [
+                    "role" => "user",
+                    "content" => $prompt
+                    ]
+                ],
+                "temperature" => $temperature, // Dodajemy parametr temperature
+                "stream" => false
+            ];
 
-        //COHORT_SUBJECTS
-        // $season = Season::where("status", "ACTIVE")->first();
-        
-        // if($season) {
-        //     $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->pluck("id")->toArray();
+            $jsonData = json_encode($data);
 
-        //     if($cohorts) {
-        //         $chatAnswer = CohortSubject::where("status", "ACTIVE")->whereIn("cohort_id", $cohorts)->get();
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . API_KEY
+            ]);
 
-        //         $chatAnswer = "klasy_przedmioty: " . $chatAnswer->map(function ($cohortSubject) {
-        //             return [
-        //                 'klasa_id' => $cohortSubject->cohort_id,
-        //                 'klasa_nazwa' => $cohortSubject->cohort_level . $cohortSubject->cohort_line,
-        //                 'przedmiot_id' => $cohortSubject->subject_id,
-        //                 'przedmiot_nazwa' => $cohortSubject->subject->name,
-        //                 'liczba_lekcji_tygodniowo' => $cohortSubject->amount,
-        //                 'nauczyciel_id' => $cohortSubject->teacher_id,
-        //                 'nauczyciel_nazwisko' => $cohortSubject->teacher->first_name . " " . $cohortSubject->teacher->last_name,
-        //             ];
-        //         })->toJson(JSON_UNESCAPED_UNICODE);
-        //     }
-        //     else {
-        //         $chatAnswer = "error 1";
-        //     }
-        // }
-        // else {
-        //     $chatAnswer = "error 2";
-        // }
-        //END: COHORT_SUBJECTS
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
 
+            $response = curl_exec($ch);
 
+            curl_close($ch);
 
+            $responseArray = json_decode($response, true);
 
+            if (!isset($responseArray['choices'][0]['message']['content'])) {
+                return "Brak odpowiedzi lub błąd.";
+            }
 
+            $chatAnswer = $responseArray['choices'][0]['message']['content'];
 
+            // 💾 Zapisujemy odpowiedź do cache
+            if (!is_dir(CACHE_DIR)) {
+                mkdir(CACHE_DIR, 0755, true);
+            }
+            file_put_contents($cacheFile, $chatAnswer);
+        }
+        else if($modelShortName == "claude") {
+            $url = BASEURL;
 
+            $data = [
+                "model" => MODEL,
+                "max_tokens" => MAX_TOKENS,
+                "messages" => [
+                    [
+                        "role" => "user",
+                        "content" => $prompt
+                    ],
+                ],
+                // "temperature" => $temperature, // Dodajemy parametr temperature
+                // "stream" => false
+            ];
 
+            $jsonData = json_encode($data);
 
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'x-api-key: ' . API_KEY,
+                'anthropic-version: 2023-06-01'
+            ]);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 120); // ⏱️ Timeout na wszelki wypadek
 
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-        // $prompt = $args["input"]["prompt"];
-        // $temperature = isset($args["input"]["temperature"]) ? (float)$args["input"]["temperature"] : TEMPERATURE; // Dynamiczna temperatura z argumentów lub domyślna
+            $responseArray = json_decode($response, true);
 
-        // $cacheKey = md5($prompt . '|' . $temperature); // 🔑 Generujemy unikalny klucz na podstawie promptu
+            if (!isset($responseArray['content'][0]['text'])) {
+                return "Brak odpowiedzi lub błąd Claude.";
+            }
 
-        // $cacheKey = md5($prompt); // 🔑 Generujemy unikalny klucz na podstawie promptu
-        // $cacheFile = CACHE_DIR . $cacheKey . '.cache';
+            $chatAnswer = $responseArray['content'][0]['text'];
+        }
+        else {
+            return;
+        }
 
-        // $modelShortName = substr(MODEL, 0, 6);
-        // if($modelShortName == "gemini") {
-        //     $url = BASEURL . "/models/" . MODEL . ":generateContent?key=" . API_KEY;
-
-        //     $data = [
-        //         "contents" => [
-        //             [
-        //                 "parts" => [
-        //                     ["text" => $prompt]
-        //                 ]
-        //             ]
-        //         ]
-        //     ];
-
-        //     $jsonData = json_encode($data);
-
-        //     $ch = curl_init($url);
-        //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        //     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        //     curl_setopt($ch, CURLOPT_POST, true);
-        //     curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-
-        //     $response = curl_exec($ch);
-        //     curl_close($ch);
-
-        //     $responseArray = json_decode($response, true);
-
-        //     if (!isset($responseArray['candidates'][0]['content']['parts'][0]['text'])) {
-        //         return "Brak odpowiedzi lub błąd.";
-        //     }
-
-        //     $chatAnswer = $responseArray['candidates'][0]['content']['parts'][0]['text'];
-        // }
-        // else if($modelShortName == "deepse") {
-        //     // 🟢 Sprawdzamy, czy odpowiedź jest w cache (cache hit)
-        //     if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < CACHE_TTL) {
-        //         $chatAnswer = file_get_contents($cacheFile);
-        //         if ($chatAnswer !== false) {
-        //             return $chatAnswer; // Cache hit
-        //         }
-        //     }
-
-        //     // 🔴 Cache miss - wysyłamy żądanie do API
-        //     $url = BASEURL . "/chat/completions";
-
-        //     $data = [
-        //         "model" => MODEL,
-        //         "messages" => [
-        //             [
-        //             "role" => "user",
-        //             "content" => $prompt
-        //             ]
-        //         ],
-        //         "temperature" => $temperature, // Dodajemy parametr temperature
-        //         "stream" => false
-        //     ];
-
-        //     $jsonData = json_encode($data);
-
-        //     $ch = curl_init($url);
-        //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        //         'Content-Type: application/json',
-        //         'Authorization: Bearer ' . API_KEY
-        //     ]);
-
-        //     curl_setopt($ch, CURLOPT_POST, true);
-        //     curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-
-        //     $response = curl_exec($ch);
-
-        //     curl_close($ch);
-
-        //     $responseArray = json_decode($response, true);
-
-        //     if (!isset($responseArray['choices'][0]['message']['content'])) {
-        //         return "Brak odpowiedzi lub błąd.";
-        //     }
-
-        //     $chatAnswer = $responseArray['choices'][0]['message']['content'];
-
-        //     // 💾 Zapisujemy odpowiedź do cache
-        //     if (!is_dir(CACHE_DIR)) {
-        //         mkdir(CACHE_DIR, 0755, true);
-        //     }
-        //     file_put_contents($cacheFile, $chatAnswer);
-        // }
-        // else if($modelShortName == "claude") {
-        //     $url = BASEURL;
-
-        //     $data = [
-        //         "model" => MODEL,
-        //         "max_tokens" => MAX_TOKENS,
-        //         "messages" => [
-        //             [
-        //                 "role" => "user",
-        //                 "content" => $prompt
-        //             ],
-        //         ],
-        //         // "temperature" => $temperature, // Dodajemy parametr temperature
-        //         // "stream" => false
-        //     ];
-
-        //     $jsonData = json_encode($data);
-
-        //     $ch = curl_init($url);
-        //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        //     curl_setopt($ch, CURLOPT_POST, true);
-        //     curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
-        //     curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        //         'Content-Type: application/json',
-        //         'x-api-key: ' . API_KEY,
-        //         'anthropic-version: 2023-06-01'
-        //     ]);
-        //     curl_setopt($ch, CURLOPT_TIMEOUT, 120); // ⏱️ Timeout na wszelki wypadek
-
-        //     $response = curl_exec($ch);
-        //     curl_close($ch);
-
-        //     $responseArray = json_decode($response, true);
-
-        //     if (!isset($responseArray['content'][0]['text'])) {
-        //         return "Brak odpowiedzi lub błąd Claude.";
-        //     }
-
-        //     $chatAnswer = $responseArray['content'][0]['text'];
-        // }
-        // else {
-        //     return;
-        // }
-
-        // if (strlen($chatAnswer) >= 1 && substr($chatAnswer, -1) == "\n") {
-        //     $chatAnswer = substr($chatAnswer, 0, -1);
-        // }
+        if (strlen($chatAnswer) >= 1 && substr($chatAnswer, -1) == "\n") {
+            $chatAnswer = substr($chatAnswer, 0, -1);
+        }
 
 
 
-        // if(json_validate($chatAnswer)) {
-        //     $firstTest = true;
-        // }
-        // else {
-        //     $firstTest = false;
-        // }
+        if(json_validate($chatAnswer)) {
+            $firstTest = true;
+        }
+        else {
+            $firstTest = false;
+        }
 
-        // if(!$firstTest) {
-        //     $cleanJson = self::extractJsonBlock($chatAnswer);
-        // }
+        if(!$firstTest) {
+            $cleanJson = self::extractJsonBlock($chatAnswer);
+        }
 
-        // if($cleanJson) {
-        //     $secondTest = true;
-        //     $chatAnswer = $cleanJson;
-        // }
-        // else {
-        //     $secondTest = false;
-        // }
+        if($cleanJson) {
+            $secondTest = true;
+            $chatAnswer = $cleanJson;
+        }
+        else {
+            $secondTest = false;
+        }
 
         return $chatAnswer;
     }

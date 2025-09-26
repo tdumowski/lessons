@@ -397,40 +397,23 @@ Harmonogram posortuj wg. klasy i slotów czasowych.
 Po wygenerowaniu harmonogramu przedstaw go w formacie JSON o strukturze:
 [
 {
-"day": int,
-"startTime": string,
-"endTime": string,
-"cohort": string,
-"classroom": string,
-"subject": string,
-"nazwisko nauczyciela": string
+"dzien_id": int,
+"slot_id": int,
+"sala_id": int,
+"klasa_id": int,
+"przedmiot_id": int,
+"nauczyciel_id": int
 }
 ]
 
 W JSON w poszczególnych polach umieść dane wg. schematu:
- - "day" => "id" ze zbioru 'dni_tygodnia'
- - "startTime" => "start_lekcji" ze zbioru 'sloty_czasowe'
- - "endTime" => "koniec_lekcji" ze zbioru 'sloty_czasowe'
- - "cohort" => "nazwa" ze zbioru 'klasy'
- - "classroom" => "nazwa" ze zbioru 'sale'
- - "subject" => "nazwa" ze zbioru 'przedmioty'
- - "teacher" => "nazwisko" ze zbioru 'nauczyciele'
+ - "dzien_id" => "id" ze zbioru 'dni_tygodnia'
+ - "slot_id" => "id" ze zbioru 'sloty_czasowe'
+ - "sala_id" => "id" ze zbioru 'sale'
+ - "klasa_id" => "id" ze zbioru 'klasy'
+ - "przedmiot_id" => "id" ze zbioru 'przedmioty'
+ - "nauczyciel_id" => "id" ze zbioru 'nauczyciele'
 
-Następnie przeanalizuj harmonogram pod kątem zgodności z wszystkimi regułami.
-Wyniki analizy zapisz ją w formacie JSON o strukturze:
-[
-{
-"nazwa reguły": string,
-"zgodność": bool,
-}
-]
-W przypadku zgodności harmonogramu z daną regułą, kluczowi "zgodność" przypisz wartość true, w przeciwnym przypadku wartośc false.
-
-Po zapisaniu analizy połącz harmonogram i wyniki analizy w jeden JSON o strukturze:
-[
-harmonogram: {},
-analiza: {},
-]
 Jako odpowiedź powinien zostać zwróony wyłącznie wynikowy, czysty JSON bez żadnych dodatkowych znaków.
 JSON sformatuj tak, aby w każdym obiekcie wszystkie pary klucz-wartość umieszczone były w jednym wierszu.
 END
