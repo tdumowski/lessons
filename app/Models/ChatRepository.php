@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 //GOOGLE GEMINI
 define('API_KEY', env("CHAT_API_KEY_GEMINI")); // 🔐 Wklej swój klucz
-define('MODEL', 'gemini-2.0-flash'); // lub np. 'gemini-1.5-flash'
+define('MODEL', 'gemini-2.5-pro'); // lub np. 'gemini-1.5-flash' | gemini-2.5-pro
 define('BASEURL', 'https://generativelanguage.googleapis.com/v1');
 
 //DEEPSEEK
@@ -28,7 +28,7 @@ define('TEMPERATURE', 0.7); // 🌡️ Domyślna temperatura odpowiedzi (0.0–2
 class ChatRepository extends Model
 {
     public static function getChatAnswer(String $prompt) {
-        set_time_limit(180);
+        set_time_limit(300);
 
         // $prompt = $args["input"]["prompt"];
         $temperature = isset($args["input"]["temperature"]) ? (float)$args["input"]["temperature"] : TEMPERATURE; // Dynamiczna temperatura z argumentów lub domyślna
@@ -173,24 +173,27 @@ class ChatRepository extends Model
             $chatAnswer = substr($chatAnswer, 0, -1);
         }
 
-        if(json_validate($chatAnswer)) {
-            $firstTest = true;
-        }
-        else {
+        if(!json_validate($chatAnswer)) {
             $firstTest = false;
         }
 
+        $cleanJson = null;
         if(!$firstTest) {
             $cleanJson = self::extractJsonBlock($chatAnswer);
         }
 
         if($cleanJson) {
-            $secondTest = true;
             $chatAnswer = $cleanJson;
         }
-        else {
-            $secondTest = false;
-        }
+
+        // $cleanJson = null;
+        // if(!json_validate($chatAnswer)) {
+        //     $cleanJson = self::extractJsonBlock($chatAnswer);
+        // }
+
+        // if($cleanJson) {
+        //     $chatAnswer = $cleanJson;
+        // }
 
         return $chatAnswer;
     }

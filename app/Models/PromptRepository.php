@@ -124,7 +124,7 @@ class PromptRepository extends Model
         return 
             "REGUŁY:
             START
-            Reguła 1: Wszystkie poniższe reguły obowiązują łącznie, żadna z reguł nie jest ani ważniejsza ani mniej ważna od pozostałych i wszystkie powinny zostać wzięte pod uwagę podczas analizy danych i opracowywania harmonogramu / odpowiedzi na pytania testowe.
+            Reguła 1: Wszystkie poniższe reguły obowiązują łącznie, żadna z reguł nie jest ani ważniejsza ani mniej ważna od pozostałych i wszystkie powinny zostać wzięte pod uwagę podczas analizy danych i opracowywania harmonogramu.
             Interpretacja: Nie można stosować jednej reguły w oderwaniu od pozostałych. Harmonogram musi spełniać wszystkie warunki jednocześnie.
             UWAGA: Przykłady podane pod każdą z reguł służą tylko ilustracji efektu działania reguły. Dane (np. nazwy przedmiotów, numery sal itd.) zawarte w przykładach nie mają odzwierciedlenia
             w realnych danych zawartych w zbiorach. Do wykonania zadania należy użyć wyłącznie danych ze zbiorów.
@@ -133,13 +133,13 @@ class PromptRepository extends Model
             Interpretacja: Klasa może zacząć lekcje później niż w pierwszym slocie i zakończyć wcześniej niż w ostatnim.
             Przykład: Klasa 3a może mieć lekcje od 9:50 do 11:40, pomijając wcześniejsze i/lub późniejsze godziny.
 
-            Reguła 3: Lekcje muszą być w kolejno następujących po sobie slotach czasowych.
+            Reguła 3: Lekcje dla danej klasy muszą być w kolejno następujących po sobie slotach czasowych.
             Interpretacja: Jeśli klasa ma więcej niż jedną lekcję danego dnia, muszą one być w kolejnych godzinach.
-            Przykład: Lekcje w slotach 2 i 3 są prawidłwe, ale w slotach 2 i 4 z pominięciem 3 są niedozwolone.
+            Przykład: Lekcje dl klasy 3a w slotach 2 i 3 są prawidłwe, ale w slotach 2 i 4 z pominięciem 3 są niedozwolone.
 
             Reguła 4: Przedmioty profilowe tylko w salach profilowych.
             Interpretacja: Przedmiot przypisany do sali profilowej musi być realizowany wyłącznie w tej sali.
-            Przykład: Jeśli fizyka jest przypisana do sali 501, to lekcje fizyki mogą odbywać się wyłącznie tylko w sali 501 ale jeśli chemia jest przypisana do sal 502 i 503 to lekcje chemii mogą odbywac się w dowolnej z tych sal i w żadnej innej
+            Przykład: Jeśli fizyka jest przypisana do sali 501, to lekcje fizyki mogą odbywać się wyłącznie w sali 501 ale jeśli chemia jest przypisana do sal 502 i 503 to lekcje chemii mogą odbywac się w dowolnej z tych sal i w żadnej innej.
 
             Reguła 5: Priorytet sal profilowych dla przedmiotów przypisanych do danej sali.
             Interpretacja: Jeśli w danym slocie o dostęp do sali profilowej ubiegają się lekcje z różnych przedmiotów a wśród nich jest przedmiot przypisany do tej sali, to ten własnie przedmiot ma pierwszeństwo.
@@ -152,15 +152,15 @@ class PromptRepository extends Model
 
             Reguła 7: Priorytet przypisanej sali dla klasy dla przedmiotów nieprofilowych.
             Interpretacja: Klasa ma przypisaną stałą salę (pole 'sala_id' w zbiorze 'klasy' ma id sali). W tym przypadku przedmioty nieprofilowe odbywają się w tej przypisanej sali i ta klasa ma do tej sali absolutny priorytet.
-            Przykład: Klasa 3c ma przypisaną satłą salę nr 402. J. Polski, historia i matematyka to przedmioty nieprofilowe więc dla klasy 3c te lekcje organizowane powinny być wyłącznie w sali 402.
+            Przykład: Klasa 3c ma przypisaną stałą salę nr 402. J. Polski, historia i matematyka to przedmioty nieprofilowe więc dla klasy 3c te lekcje organizowane powinny być wyłącznie w sali 402.
 
             Reguła 8: Dowolny wybór sali dla przedmiotów nieprofilowych dla klasy bez sali.
             Interpretacja: Klasa nie ma przypisanej stałej sali (pole 'sala_id' w zbiorze 'klasy' ma wartość NULL). W tym przypadku przedmioty nieprofilowe odbywają się w dowolnej, pierwszej wolnej nieprofilowej sali.
-            Przykład: Klasa 3c ma przypisaną satłą salę nr 402. J. Polski, historia i matematyka to przedmioty nieprofilowe więc dla klasy 3c te lekcje organizowane powinny być wyłącznie w sali 402.
+            Przykład: Klasa 3c ma przypisaną stałą salę nr 402. J. Polski, historia i matematyka to przedmioty nieprofilowe więc dla klasy 3c te lekcje organizowane powinny być wyłącznie w sali 402.
 
             Reguła 9: W sali o nazwie 'WF' mogą odbywać się wyłącznie lekcje WF.
 
-            Reguła 10: W jednym slocie czasowym (czyli w jednej godzinie lekcyjnej) w jednej sali może odbywać się dokładnie jedna lekcja, która spełnia jednocześnie wszystkie poniższe warunki:
+            Reguła 10: W danym dniu w jednym slocie czasowym w jednej sali może odbywać się dokładnie jedna lekcja, która spełnia jednocześnie wszystkie poniższe warunki:
                 a) Dotyczy jednej klasy
                 b) Dotyczy jednego przedmiotu
                 c) Prowadzona jest przez jednego nauczyciela
@@ -206,7 +206,6 @@ class PromptRepository extends Model
             - 'nauczyciel_id' => 'id' ze zbioru 'nauczyciele'
 
             Jako odpowiedź powinien zostać zwrócony wyłącznie wynikowy, czysty JSON bez żadnych dodatkowych znaków.
-            JSON sformatuj tak, aby w każdym obiekcie wszystkie pary klucz-wartość umieszczone były w jednym wierszu.
             END
         ";
     }
@@ -226,7 +225,11 @@ class PromptRepository extends Model
             "WYKLUCZENIE KOLIZJI:
             START
             Poniżej znajduje się wcześniej wygenerowany plan dla innych klas.
-            Opracowuj nowy plan tak aby unikał on kolizji z niżej podanym planem (weź pod uwagę wcześniej podane reguły).
+            Opracuj nowy plan tak aby unikał on kolizji z wcześniej wygenerowanym planem.
+            Dla aktualnie analizowanej klasy niedopuszczalne jest:
+            1) zaplanowanie jej lekcji w tym samym dniu (dzień_id), tym samym slocie (slot_id) i w tej samej sali (sala_id) ORAZ
+            2) zaplanowanie jej lekcji w tym samym dniu (dzień_id), tym samym slocie (slot_id) i z tym samym nauczycielem (nauczyciel)
+            co we wcześniej wygenerowanym planem.
             Wcześniej wygenerowany plan: {$newPlan}.
             END
         ";

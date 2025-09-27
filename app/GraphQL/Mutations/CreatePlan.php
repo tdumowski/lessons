@@ -26,7 +26,7 @@ final readonly class CreatePlan
             return;
         }
 
-        $cohortIds = [1, 2];
+        $cohortIds = [1,2,3,4];
 
         // $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->get();
         $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->whereIn("id", $cohortIds)->get();
@@ -44,13 +44,13 @@ final readonly class CreatePlan
         LogRepository::saveLogFile("log", "INFO (Mutation CreatePlan): first job triggered");
 
         if(JobCreatePlan::dispatch(
-            user: $user,
             cohorts: $cohorts,
             initialPrompt: $initialPrompt,
             generalDatasetsPrompt: $generalDatasetsPrompt,
             rulesPrompt: $rulesPrompt,
             cohortIndex: 0,
-            newPlan: ""
+            newPlan: "",
+            user: $user
             )
         ) 
         {

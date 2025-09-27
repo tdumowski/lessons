@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
                getPlans{
                   id
                   name
+                  test
                   created_at
                }
             }
@@ -120,7 +121,16 @@ document.addEventListener('DOMContentLoaded', function () {
                for (let i = 0; i < plans.length; i++) {
                   let plan = plans[i];
                   let el = document.createElement("option");
-                  el.textContent = plan.name + " (" + plan.created_at + ")";
+
+                  let test = "⚠️";
+                  if(plan.test == 1) {
+                     test = "✔️";
+                  }
+                  else if(plan.test == 0) {
+                     test = "❌";
+                  }
+
+                  el.textContent = plan.name + " (" + plan.created_at + ") " + test;
                   el.value = plan.id;
                   lstPlans.appendChild(el);
                }

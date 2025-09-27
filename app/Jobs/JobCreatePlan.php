@@ -11,29 +11,26 @@ use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Plan;
-use App\Models\Season;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Carbon;
 
 class JobCreatePlan implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public User $user;
     public Collection $cohorts;
     public string $initialPrompt;
     public string $generalDatasetsPrompt;
     public string $rulesPrompt;
     public int $cohortIndex;
     public string $newPlan;
+    public User $user;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(User $user, Collection $cohorts, string $initialPrompt, string $generalDatasetsPrompt, string $rulesPrompt, int $cohortIndex, 
-        string $newPlan)
+    public function __construct(Collection $cohorts, string $initialPrompt, string $generalDatasetsPrompt, string $rulesPrompt, int $cohortIndex, 
+        string $newPlan, User $user)
     {
         $this->user = $user;
         $this->cohorts = $cohorts;
@@ -112,24 +109,25 @@ class JobCreatePlan implements ShouldQueue
             );
         }
         else {
+            //cohort with given index NOT exists -> the newPlan json id saved in database and email is sent
             LogRepository::saveLogFile("log", "INFO (Job JobCreatePlan): cohort[{$this->cohortIndex}] NOT found, saving the data into DB");
 
-            //cohort with given index NOT exists -> the newPlan json id saved in database and email is sent
-            $plan = new Plan();
-            $plan->school_id = $this->user->school->id;
-            $plan->season_id = Season::where("status", "ACTIVE")->first()->id;
-            $plan->name = Carbon::now()->timezone('Europe/Warsaw')->format('Y-m-d H:i');
-            $plan->source = $this->newPlan;
-            $plan->created_by = $this->user->id;
-            
-            if($plan->save()) {
-                LogRepository::saveLogFile("chat", "MERGED PLAN:\n".$this->newPlan);
-                LogRepository::saveLogFile("log", "INFO (Job JobCreatePlan): data saved into DB");
-            }
+            $this->newPlan = self::cleanJson($this->newPlan);
+
+            JobSavePlan::dispatch(
+                user: $this->user,
+                newPlan: $this->newPlan
+            );
+
+
         }
     }
 
-    private static function extractJsonBlock($string) {
+    private static function cleanJson(string $string) {
+        return json_encode(json_decode($string, true), JSON_UNESCAPED_UNICODE);;
+    }
+
+    private static function extractJsonBlock(string $string) {
         $start = strpos($string, '[');
         $end = strrpos($string, ']');
         if ($start !== false && $end !== false && $end > $start) {
@@ -141,7 +139,7 @@ class JobCreatePlan implements ShouldQueue
         return null;
     }
 
-    private static function mergeJsons($newPlan, $chatAnswer): string {
+    private static function mergeJsons(string $newPlan, string $chatAnswer): string {
         $array1 = json_decode($newPlan, true);
         $array2 = json_decode($chatAnswer, true);
 
