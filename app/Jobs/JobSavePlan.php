@@ -23,7 +23,7 @@ class JobSavePlan implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(String $newPlan, User $user)
+    public function __construct(string $newPlan, User $user)
     {
         $this->user = $user;
         $this->school = $this->user->school;
@@ -83,5 +83,10 @@ class JobSavePlan implements ShouldQueue
 
             LogRepository::saveLogFile("log", "INFO (Job JobSavePlan): lessons saved into DB");
         }
+
+        //trigger job to verify the data
+        JobVerifyPlan::dispatch(
+            plan: $plan
+        );
     }
 }

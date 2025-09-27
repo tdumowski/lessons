@@ -6,6 +6,9 @@ type Mutation {
 }
 
 type Query {
+  	testQuery: Boolean
+  	@field(resolver: "App\\GraphQL\\Queries\\TestQuery")
+
   	hello: String
   	@field(resolver: "App\\GraphQL\\Queries\\HelloQuery")
 

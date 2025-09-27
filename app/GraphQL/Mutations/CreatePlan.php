@@ -26,7 +26,7 @@ final readonly class CreatePlan
             return;
         }
 
-        $cohortIds = [1,2,3,4];
+        $cohortIds = [1];
 
         // $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->get();
         $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->whereIn("id", $cohortIds)->get();

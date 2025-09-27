@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\ChatRepository;
 use App\Models\CohortSubject;
 use App\Models\LogRepository;
+use App\Models\Plan;
 use App\Models\PromptRepository;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -46,7 +47,6 @@ class JobCreatePlan implements ShouldQueue
      */
     public function handle(): void
     {
-
         //get n-cohort
         $cohort = ($this->cohorts->has($this->cohortIndex)) ? $this->cohorts[$this->cohortIndex] : null;
         
@@ -118,8 +118,6 @@ class JobCreatePlan implements ShouldQueue
                 user: $this->user,
                 newPlan: $this->newPlan
             );
-
-
         }
     }
 
