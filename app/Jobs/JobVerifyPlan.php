@@ -35,9 +35,10 @@ class JobVerifyPlan implements ShouldQueue
         // $problemsCritical = self::exclusiveClassroomSubjects($problemsCritical, $this->plan);
 
         //TEST: timeslots gaps
+        // $problemsSoft = self::timeslotsGaps($problemsSoft, $this->plan);
 
         //TEST: duplicates
-        $problemsCritical = self::duplicates($problemsCritical, $this->plan);
+        // $problemsCritical = self::duplicates($problemsCritical, $this->plan);
 
         //TEST: profilic subjects in profilic classrooms only
         
@@ -232,6 +233,51 @@ class JobVerifyPlan implements ShouldQueue
             $problem["cohort"] = $lesson->cohort;
             $problem["subject"] = $lesson->subject;
             $problem["teacher"] = $lesson->teacher;
+
+            $problems[] = $problem;
+        }
+
+        return $problems;
+    }
+
+    private static function timeslotsGaps($problems, Plan $plan): array {
+        $lessons = DB::table('lessons as l1')
+            ->join('timeslots as ts1', 'ts1.id', '=', 'l1.timeslot_id')
+            ->join('weekdays', 'weekdays.id', '=', 'l1.weekday_id')
+            ->join('cohorts', 'cohorts.id', '=', 'l1.cohort_id')
+            ->join('lessons as l2', function($join) {
+                $join->on('l2.plan_id', '=', 'l1.plan_id')
+                    ->on('l2.weekday_id', '=', 'l1.weekday_id')
+                    ->on('l2.cohort_id', '=', 'l1.cohort_id');
+            })
+            ->join('timeslots as ts2', 'ts2.id', '=', 'l2.timeslot_id')
+            ->join('timeslots as ts_missing', function($join) {
+                $join->on('ts_missing.order', '>', 'ts1.order')
+                    ->on('ts_missing.order', '<', 'ts2.order');
+            })
+            ->where('l1.plan_id', $plan->id)
+            ->whereColumn('ts2.order', '>', 'ts1.order')
+            ->whereNotExists(function($query) {
+                $query->select(DB::raw(1))
+                    ->from('lessons as lx')
+                    ->join('timeslots as tx', 'tx.id', '=', 'lx.timeslot_id')
+                    ->whereColumn('lx.plan_id', 'l1.plan_id')
+                    ->whereColumn('lx.weekday_id', 'l1.weekday_id')
+                    ->whereColumn('lx.cohort_id', 'l1.cohort_id')
+                    ->whereColumn('tx.order', 'ts_missing.order');
+            })
+            ->select('weekdays.name as weekday', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"), 'ts_missing.start as missing_timeslot_start')
+            ->groupBy('weekdays.name', 'cohort', 'ts_missing.id', 'ts_missing.start', 'ts_missing.order')
+            ->orderBy('l1.weekday_id')
+            ->orderBy('l1.cohort_id')
+            ->orderBy('ts_missing.order')
+            ->get();
+
+        foreach($lessons as $lesson) {
+            $problem["description"] = "Okienka pomiędzy lekcjami";
+            $problem["weekday"] = $lesson->weekday;
+            $problem["timeslot"] = $lesson->missing_timeslot_start;
+            $problem["cohort"] = $lesson->cohort;
 
             $problems[] = $problem;
         }
