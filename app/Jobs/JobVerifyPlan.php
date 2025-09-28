@@ -40,10 +40,9 @@ class JobVerifyPlan implements ShouldQueue
         //TEST: duplicates
         // $problemsCritical = self::duplicates($problemsCritical, $this->plan);
 
-        //TEST: profilic subjects in profilic classrooms only
+        //TEST: profile subjects in their classrooms only
+        // $problemsCritical = self::profileSubjectsClassrooms($problemsCritical, $this->plan);
         
-        //TEST: profilic subjects NOT in other profilic classrooms
-
         //TEST: max 2 lessons with one subject by day
 
         //TEST: 2 lessons with one subject one by one
@@ -98,13 +97,13 @@ class JobVerifyPlan implements ShouldQueue
             ->get();
 
         foreach($lessons as $lesson) {
-            $problem["description"] = "Niedozwolony przedmiot w sali exclusive";
-            $problem["weekday"] = $lesson->weekday;
-            $problem["timeslot"] = $lesson->timeslot;
-            $problem["cohort"] = $lesson->cohort;
-            $problem["classroom"] = $lesson->classroom;
-            $problem["exclusive_subject"] = $lesson->exclusive_subject;
-            $problem["plan_subject"] = $lesson->plan_subject;
+            $problem["Błąd"] = "Niedozwolony przedmiot w sali exclusive";
+            $problem["Dzień"] = $lesson->weekday;
+            $problem["Godzina"] = $lesson->timeslot;
+            $problem["Klasa"] = $lesson->cohort;
+            $problem["Sala"] = $lesson->classroom;
+            $problem["Przedmiot dozwolony"] = $lesson->exclusive_subject;
+            $problem["Przedmiot w planie"] = $lesson->plan_subject;
 
             $problems[] = $problem;
         }
@@ -146,13 +145,13 @@ class JobVerifyPlan implements ShouldQueue
         // LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $lessons);
 
         foreach($lessons as $lesson) {
-            $problem["description"] = "Więcej niż jedna lekcja w tej samej sali";
-            $problem["weekday"] = $lesson->weekday;
-            $problem["timeslot"] = $lesson->timeslot;
-            $problem["classroom"] = $lesson->classroom;
-            $problem["cohort"] = $lesson->cohort;
-            $problem["subject"] = $lesson->subject;
-            $problem["teacher"] = $lesson->teacher;
+            $problem["Błąd"] = "Więcej niż jedna lekcja w tej samej sali";
+            $problem["Dzień"] = $lesson->weekday;
+            $problem["Godzina"] = $lesson->timeslot;
+            $problem["Sala"] = $lesson->classroom;
+            $problem["Klasa"] = $lesson->cohort;
+            $problem["Przedmiot"] = $lesson->subject;
+            $problem["Nauczyciel"] = $lesson->teacher;
 
             $problems[] = $problem;
         }
@@ -186,13 +185,13 @@ class JobVerifyPlan implements ShouldQueue
             ->get();
 
         foreach($lessons as $lesson) {
-            $problem["description"] = "Klasa ma więcej lekcji w tym samym czasie";
-            $problem["weekday"] = $lesson->weekday;
-            $problem["timeslot"] = $lesson->timeslot;
-            $problem["classroom"] = $lesson->classroom;
-            $problem["cohort"] = $lesson->cohort;
-            $problem["subject"] = $lesson->subject;
-            $problem["teacher"] = $lesson->teacher;
+            $problem["Błąd"] = "Klasa ma więcej lekcji w tym samym czasie";
+            $problem["Dzień"] = $lesson->weekday;
+            $problem["Godzina"] = $lesson->timeslot;
+            $problem["Sala"] = $lesson->classroom;
+            $problem["Klasa"] = $lesson->cohort;
+            $problem["Przedmiot"] = $lesson->subject;
+            $problem["Nauczyciel"] = $lesson->teacher;
 
             $problems[] = $problem;
         }
@@ -226,13 +225,13 @@ class JobVerifyPlan implements ShouldQueue
             ->get();
 
         foreach($lessons as $lesson) {
-            $problem["description"] = "Nauczyciel ma więcej lekcji w tym samym czasie";
-            $problem["weekday"] = $lesson->weekday;
-            $problem["timeslot"] = $lesson->timeslot;
-            $problem["classroom"] = $lesson->classroom;
-            $problem["cohort"] = $lesson->cohort;
-            $problem["subject"] = $lesson->subject;
-            $problem["teacher"] = $lesson->teacher;
+            $problem["Błąd"] = "Nauczyciel ma więcej lekcji w tym samym czasie";
+            $problem["Dzień"] = $lesson->weekday;
+            $problem["Godzina"] = $lesson->timeslot;
+            $problem["Sala"] = $lesson->classroom;
+            $problem["Klasa"] = $lesson->cohort;
+            $problem["Przedmiot"] = $lesson->subject;
+            $problem["Nauczyciel"] = $lesson->teacher;
 
             $problems[] = $problem;
         }
@@ -274,10 +273,61 @@ class JobVerifyPlan implements ShouldQueue
             ->get();
 
         foreach($lessons as $lesson) {
-            $problem["description"] = "Okienka pomiędzy lekcjami";
-            $problem["weekday"] = $lesson->weekday;
-            $problem["timeslot"] = $lesson->missing_timeslot_start;
-            $problem["cohort"] = $lesson->cohort;
+            $problem["Błąd"] = "Okienka pomiędzy lekcjami";
+            $problem["Dzień"] = $lesson->weekday;
+            $problem["Godzina"] = $lesson->missing_timeslot_start;
+            $problem["Klasa"] = $lesson->cohort;
+
+            $problems[] = $problem;
+        }
+
+        return $problems;
+    }
+
+    private static function profileSubjectsClassrooms($problems, Plan $plan): array {
+        $lessons = DB::table('lessons as l')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'l.weekday_id')
+            ->join('timeslots', 'timeslots.id', '=', 'l.timeslot_id')
+            ->join('classrooms', 'classrooms.id', '=', 'l.classroom_id')
+            ->leftJoin('classroom_subjects', 'classroom_subjects.subject_id', '=', 'l.subject_id')
+            ->leftJoin('classrooms as classrooms2', 'classrooms2.id', '=', 'classroom_subjects.classroom_id')
+            ->join('cohorts', 'cohorts.id', '=', 'l.cohort_id')
+            ->join('teachers', 'teachers.id', '=', 'l.teacher_id')
+            ->join('subjects', 'subjects.id', '=', 'l.subject_id')
+            ->where('l.plan_id', $plan->id)
+            ->whereColumn('subjects.id', 'classroom_subjects.subject_id')
+            ->whereColumn('classrooms.id', "!=", 'classrooms2.id')
+            ->where(function ($query) {
+                $query->whereColumn('classrooms.id', 'classrooms2.id')
+                    ->orWhereNotExists(function ($sub) {
+                        $sub->select(DB::raw(1))
+                            ->from('classroom_subjects as cs2')
+                            ->whereColumn('cs2.classroom_id', 'l.classroom_id')
+                            ->whereColumn('cs2.subject_id', 'subjects.id');
+                    });
+            })
+            ->select(
+                'weekdays.name as weekday',
+                'timeslots.start as timeslot',
+                'classrooms.name as classroom',
+                DB::raw("CONCAT(cohorts.level, cohorts.line) as cohort"),
+                DB::raw("CONCAT(teachers.first_name, teachers.last_name) as teacher"),
+                'subjects.name as subject',
+                'classrooms.name as plan_classroom',
+                'classrooms2.name as required_classroom'
+            )
+            ->get();
+
+        // LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n count: " . $lessons->count());
+
+        foreach($lessons as $lesson) {
+            $problem["Błąd"] = "Lekcje profilowe w nie swoich salach";
+            $problem["Dzień"] = $lesson->weekday;
+            $problem["Godzina"] = $lesson->timeslot;
+            $problem["Klasa"] = $lesson->cohort;
+            $problem["Przedmiot"] = $lesson->subject;
+            $problem["Sala wymagana"] = $lesson->required_classroom;
+            $problem["Sala w planie"] = $lesson->plan_classroom;
 
             $problems[] = $problem;
         }

@@ -100,7 +100,10 @@ document.addEventListener('DOMContentLoaded', function () {
                getPlans{
                   id
                   name
-                  test
+                  test_critical
+                  test_critical_details
+                  test_soft
+                  test_soft_details
                   created_at
                }
             }
@@ -122,15 +125,23 @@ document.addEventListener('DOMContentLoaded', function () {
                   let plan = plans[i];
                   let el = document.createElement("option");
 
-                  let test = "⚠️";
-                  if(plan.test == 1) {
-                     test = "✔️";
+                  let test_critical = "⚠️";
+                  if(plan.test_critical == 1) {
+                     test_critical = "✔️";
                   }
-                  else if(plan.test == 0) {
-                     test = "❌";
+                  else if(plan.test_critical == 0) {
+                     test_critical = "❌";
                   }
 
-                  el.textContent = plan.name + " (" + plan.created_at + ") " + test;
+                  let test_soft = "";
+                  if(plan.test_soft == 1) {
+                     test_soft = "✔️";
+                  }
+                  else if(plan.test_soft == 0) {
+                     test_soft = "❌";
+                  }
+
+                  el.textContent = plan.name + " (" + plan.created_at + ") " + test_critical + " " + test_soft;
                   el.value = plan.id;
                   lstPlans.appendChild(el);
                }
