@@ -77,6 +77,7 @@ class PromptRepository extends Model
                     return [
                         'przedmiot_id'    => $subject->id,
                         'przedmiot_nazwa' => $subject->name,
+                        'przedmiot_wyłączność' => $subject->exclusive,
                     ];
                 })->values()->all();
             })->all();
@@ -158,7 +159,7 @@ class PromptRepository extends Model
             Interpretacja: Klasa nie ma przypisanej stałej sali (pole 'sala_id' w zbiorze 'klasy' ma wartość NULL). W tym przypadku przedmioty nieprofilowe odbywają się w dowolnej, pierwszej wolnej nieprofilowej sali.
             Przykład: Klasa 3c ma przypisaną stałą salę nr 402. J. Polski, historia i matematyka to przedmioty nieprofilowe więc dla klasy 3c te lekcje organizowane powinny być wyłącznie w sali 402.
 
-            Reguła 9: W sali o nazwie 'WF' mogą odbywać się wyłącznie lekcje WF.
+            Reguła 9: W sali z przypisanym przedmiotem na wyłączność, mogą odbywać się wyłącznie lekcje z przedmiotów przypisanych do tej sali.
 
             Reguła 10: W danym dniu w jednym slocie czasowym w jednej sali może odbywać się dokładnie jedna lekcja, która spełnia jednocześnie wszystkie poniższe warunki:
                 a) Dotyczy jednej klasy

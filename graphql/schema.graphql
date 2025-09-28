@@ -27,7 +27,7 @@ type Plan {
 	id: Int!
 	name: String!
 	test: Boolean
-	test_comment: String
+	test_details: String
 	created_at: String!
 }
 

@@ -30,25 +30,60 @@ class JobVerifyPlan implements ShouldQueue
     {
         $problems = [];
 
-        //TEST: Exclusive ClassroomSubjects
+        //TEST: exclusive ClassroomSubjects
+        // $problems = self::exclusiveClassroomSubjects($problems, $this->plan);
+
+        //TEST: timeslots gaps
+
+        //TEST: duplicates
+        $problems = self::duplicates($problems, $this->plan);
+
+        //TEST: profilic subjects in profilic classrooms only
+        
+        //TEST: profilic subjects NOT in other profilic classrooms
+
+        //TEST: max 2 lessons with one subject by day
+
+        //TEST: 2 lessons with one subject one by one
+
+        //TEST: lessons by teachers not assigned to proper subject
+
+        //TEST: proper amount of lessons by subject
+
+
+        //set test values
+
+        if(count($problems) > 0) {
+            $problems = json_encode($problems, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $problems);
+            $this->plan->test_details = $problems;
+            $this->plan->test = 0;
+        }
+        else {
+            $this->plan->test_details = null;
+            $this->plan->test = 1;
+        }
+        $this->plan->save();
+
+    }
+
+    private static function exclusiveClassroomSubjects(array $problems, Plan $plan): array {
         $lessons = DB
             ::table('lessons')
-            ->leftJoin('weekdays', 'lessons.weekday_id', '=', 'weekdays.id')
-            ->leftJoin('timeslots', 'lessons.timeslot_id', '=', 'timeslots.id')
-            ->leftJoin('classrooms', 'lessons.classroom_id', '=', 'classrooms.id')
-            ->leftJoin('cohorts', 'lessons.cohort_id', '=', 'cohorts.id')
-            ->leftJoin('subjects as plan_subjects', 'lessons.subject_id', '=', 'plan_subjects.id')
-            ->leftJoin('classroom_subjects', 'classroom_subjects.classroom_id', '=', 'classrooms.id')
-            ->leftJoin('subjects as exclusive_subjects', 'classroom_subjects.subject_id', '=', 'exclusive_subjects.id')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'lessons.weekday_id')
+            ->leftJoin('timeslots', 'timeslots.id', '=', 'lessons.timeslot_id')
+            ->leftJoin('classrooms', 'classrooms.id', '=', 'lessons.classroom_id')
+            ->leftJoin('cohorts', 'cohorts.id', '=', 'lessons.cohort_id')
+            ->leftJoin('subjects as plan_subjects', 'plan_subjects.id', '=', 'lessons.subject_id')
+            ->leftJoin('classroom_subjects', 'classrooms.id', '=', 'classroom_subjects.classroom_id')
+            ->leftJoin('subjects as exclusive_subjects', 'exclusive_subjects.id', '=', 'classroom_subjects.subject_id')
             ->select('weekdays.name as weekday', 'timeslots.start as timeslot', 'classrooms.name as classroom', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"),
                 'exclusive_subjects.name as exclusive_subject', 'plan_subjects.name as plan_subject')
-            ->where('lessons.plan_id', $this->plan->id)
+            ->where('lessons.plan_id', $plan->id)
             ->where('classroom_subjects.exclusive', 1)
             ->whereColumn('exclusive_subjects.id', "!=", 'plan_subjects.id')
             ->whereNotNull('exclusive_subjects.id')
             ->get();
-
-        LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n count: " . $lessons->count());
 
         foreach($lessons as $lesson) {
             $problem["description"] = "Niedozwolony przedmiot w sali exclusive";
@@ -62,20 +97,134 @@ class JobVerifyPlan implements ShouldQueue
             $problems[] = $problem;
         }
 
+        return $problems;
+    }
 
-        
-        //set test values
+    private static function duplicates(array $problems, Plan $plan): array {
 
-        if(count($problems) > 0) {
-            $problems = json_encode($problems, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
-            LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $problems);
-            $this->plan->test_comment = $problems;
-            $this->plan->test = 0;
+        //more lessons in the same classroom
+        $lessons = DB
+            ::table('lessons as l')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'l.weekday_id')
+            ->leftJoin('timeslots', 'timeslots.id', '=', 'l.timeslot_id')
+            ->leftJoin('classrooms', 'classrooms.id', '=', 'l.classroom_id')
+            ->leftJoin('cohorts', 'cohorts.id', '=', 'l.cohort_id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'l.teacher_id')
+            ->leftJoin('subjects', 'subjects.id', '=', 'l.subject_id')
+            ->select('weekdays.name as weekday', 'timeslots.start as timeslot', 'classrooms.name as classroom', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"),
+                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, teachers.last_name) AS teacher"))
+            ->where('plan_id', $plan->id)
+            ->where(function ($query) {
+                // duplikat w plan_id + weekday_id
+                $query->whereExists(function ($q) {
+                    $q->select(DB::raw(1))
+                    ->from('lessons as x')
+                    ->whereRaw('x.id <> l.id')
+                    ->whereColumn('x.plan_id', 'l.plan_id')
+                    ->whereColumn('x.weekday_id', 'l.weekday_id')
+                    ->whereColumn('x.timeslot_id', 'l.timeslot_id')
+                    ->whereColumn('x.classroom_id', 'l.classroom_id');
+                });
+            })
+            ->orderBy("l.weekday_id")
+            ->orderBy("l.timeslot_id")
+            ->orderBy("l.classroom_id")
+            ->get();
+
+        // LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $lessons);
+
+        foreach($lessons as $lesson) {
+            $problem["description"] = "Więcej niż jedna lekcja w tej samej sali";
+            $problem["weekday"] = $lesson->weekday;
+            $problem["timeslot"] = $lesson->timeslot;
+            $problem["classroom"] = $lesson->classroom;
+            $problem["cohort"] = $lesson->cohort;
+            $problem["subject"] = $lesson->subject;
+            $problem["teacher"] = $lesson->teacher;
+
+            $problems[] = $problem;
         }
-        else {
-            $this->plan->test_comment = null;
-            $this->plan->test = 1;
+
+        //more lessons of one cohort in the same timeslots
+        $lessons = DB
+            ::table('lessons as l')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'l.weekday_id')
+            ->leftJoin('timeslots', 'timeslots.id', '=', 'l.timeslot_id')
+            ->leftJoin('classrooms', 'classrooms.id', '=', 'l.classroom_id')
+            ->leftJoin('cohorts', 'cohorts.id', '=', 'l.cohort_id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'l.teacher_id')
+            ->leftJoin('subjects', 'subjects.id', '=', 'l.subject_id')
+            ->select('weekdays.name as weekday', 'timeslots.start as timeslot', 'classrooms.name as classroom', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"),
+                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, teachers.last_name) AS teacher"))
+            ->where('plan_id', $plan->id)
+            ->where(function ($query) {
+                // duplikat w plan_id + weekday_id
+                $query->whereExists(function ($q) {
+                    $q->select(DB::raw(1))
+                    ->from('lessons as x')
+                    ->whereRaw('x.id <> l.id')
+                    ->whereColumn('x.plan_id', 'l.plan_id')
+                    ->whereColumn('x.weekday_id', 'l.weekday_id')
+                    ->whereColumn('x.timeslot_id', 'l.timeslot_id')
+                    ->whereColumn('x.cohort_id', 'l.cohort_id');
+                });
+            })
+            ->orderBy("l.weekday_id")
+            ->orderBy("l.timeslot_id")
+            ->get();
+
+        foreach($lessons as $lesson) {
+            $problem["description"] = "Klasa ma więcej lekcji w tym samym czasie";
+            $problem["weekday"] = $lesson->weekday;
+            $problem["timeslot"] = $lesson->timeslot;
+            $problem["classroom"] = $lesson->classroom;
+            $problem["cohort"] = $lesson->cohort;
+            $problem["subject"] = $lesson->subject;
+            $problem["teacher"] = $lesson->teacher;
+
+            $problems[] = $problem;
         }
-        $this->plan->save();
+
+        //teachers in more than one timeslots
+        $lessons = DB
+            ::table('lessons as l')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'l.weekday_id')
+            ->leftJoin('timeslots', 'timeslots.id', '=', 'l.timeslot_id')
+            ->leftJoin('classrooms', 'classrooms.id', '=', 'l.classroom_id')
+            ->leftJoin('cohorts', 'cohorts.id', '=', 'l.cohort_id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'l.teacher_id')
+            ->leftJoin('subjects', 'subjects.id', '=', 'l.subject_id')
+            ->select('weekdays.name as weekday', 'timeslots.start as timeslot', 'classrooms.name as classroom', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"),
+                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, teachers.last_name) AS teacher"))
+            ->where('plan_id', $plan->id)
+            ->where(function ($query) {
+                // duplikat w plan_id + weekday_id
+                $query->whereExists(function ($q) {
+                    $q->select(DB::raw(1))
+                    ->from('lessons as x')
+                    ->whereRaw('x.id <> l.id')
+                    ->whereColumn('x.plan_id', 'l.plan_id')
+                    ->whereColumn('x.weekday_id', 'l.weekday_id')
+                    ->whereColumn('x.timeslot_id', 'l.timeslot_id')
+                    ->whereColumn('x.teacher_id', 'l.teacher_id');
+                });
+            })
+            ->orderBy("l.weekday_id")
+            ->orderBy("l.timeslot_id")
+            ->get();
+
+        foreach($lessons as $lesson) {
+            $problem["description"] = "Nauczyciel ma więcej lekcji w tym samym czasie";
+            $problem["weekday"] = $lesson->weekday;
+            $problem["timeslot"] = $lesson->timeslot;
+            $problem["classroom"] = $lesson->classroom;
+            $problem["cohort"] = $lesson->cohort;
+            $problem["subject"] = $lesson->subject;
+            $problem["teacher"] = $lesson->teacher;
+
+            $problems[] = $problem;
+        }
+
+        return $problems;
     }
 }

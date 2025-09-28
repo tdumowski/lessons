@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('plans', function (Blueprint $table) {
-            $table->tinyInteger('test')->nullable()->after("source")->comment('null:test not performed|1:passed|0:failed');
-            $table->text('test_details')->nullable()->after("test")->comment('failed test details');
+        Schema::table('timeslots', function (Blueprint $table) {
+            $table->tinyInteger('order')->after("end")->nullable()->comment('needed for plan tests');
         });
     }
 
@@ -22,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('plans', function (Blueprint $table) {
+        Schema::table('timeslots', function (Blueprint $table) {
             //
         });
     }
