@@ -28,15 +28,16 @@ class JobVerifyPlan implements ShouldQueue
      */
     public function handle(): void
     {
-        $problems = [];
+        $problemsCritical = [];
+        $problemsSoft = [];
 
         //TEST: exclusive ClassroomSubjects
-        // $problems = self::exclusiveClassroomSubjects($problems, $this->plan);
+        // $problemsCritical = self::exclusiveClassroomSubjects($problemsCritical, $this->plan);
 
         //TEST: timeslots gaps
 
         //TEST: duplicates
-        $problems = self::duplicates($problems, $this->plan);
+        $problemsCritical = self::duplicates($problemsCritical, $this->plan);
 
         //TEST: profilic subjects in profilic classrooms only
         
@@ -51,18 +52,28 @@ class JobVerifyPlan implements ShouldQueue
         //TEST: proper amount of lessons by subject
 
 
-        //set test values
-
-        if(count($problems) > 0) {
-            $problems = json_encode($problems, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
-            LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $problems);
-            $this->plan->test_details = $problems;
-            $this->plan->test = 0;
+        if(count($problemsCritical) > 0) {
+            $problemsCritical = json_encode($problemsCritical, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $problemsCritical);
+            $this->plan->test_critical = 0;
+            $this->plan->test_critical_details = $problemsCritical;
         }
         else {
-            $this->plan->test_details = null;
-            $this->plan->test = 1;
+            $this->plan->test_critical = 1;
+            $this->plan->test_critical_details = null;
         }
+
+        if(count($problemsSoft) > 0) {
+            $problemsSoft = json_encode($problemsSoft, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $problemsSoft);
+            $this->plan->test_soft = 0;
+            $this->plan->test_soft_details = $problemsSoft;
+        }
+        else {
+            $this->plan->test_soft = 1;
+            $this->plan->test_soft_details = null;
+        }
+
         $this->plan->save();
 
     }

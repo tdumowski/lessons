@@ -26,8 +26,10 @@ input chatQuestion {
 type Plan {
 	id: Int!
 	name: String!
-	test: Boolean
-	test_details: String
+	test_critical: Boolean
+	test_critical_details: String
+	test_soft: Boolean
+	test_soft_details: String
 	created_at: String!
 }
 
