@@ -47,6 +47,7 @@ class JobVerifyPlan implements ShouldQueue
         // $problemsSoft = self::dailyLessonsExceeded($problemsSoft, $this->plan);
 
         //TEST: 2 lessons with one subject one by one
+        // $problemsSoft = self::sameLessonsGaps($problemsSoft, $this->plan);
 
         //TEST: lessons by teachers not assigned to proper subject
 
@@ -97,15 +98,22 @@ class JobVerifyPlan implements ShouldQueue
             ->whereNotNull('exclusive_subjects.id')
             ->get();
 
-        foreach($lessons as $lesson) {
-            $problem["Błąd"] = "Niedozwolony przedmiot w sali exclusive";
-            $problem["Dzień"] = $lesson->weekday;
-            $problem["Godzina"] = $lesson->timeslot;
-            $problem["Klasa"] = $lesson->cohort;
-            $problem["Sala"] = $lesson->classroom;
-            $problem["Przedmiot dozwolony"] = $lesson->exclusive_subject;
-            $problem["Przedmiot w planie"] = $lesson->plan_subject;
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Niedozwolony przedmiot w sali exclusive";
+        }
 
+        foreach($lessons as $lesson) {
+            $problemDetail["weekday"] = $lesson->weekday;
+            $problemDetail["timeslot"] = $lesson->timeslot;
+            $problemDetail["cohort"] = $lesson->cohort;
+            $problemDetail["classroom"] = $lesson->classroom;
+            $problemDetail["exclusive_subject"] = $lesson->exclusive_subject; //przedmiot przypisany do sali
+            $problemDetail["plan_subject"] = $lesson->plan_subject; //przedmiot w planie
+
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
             $problems[] = $problem;
         }
 
@@ -143,17 +151,22 @@ class JobVerifyPlan implements ShouldQueue
             ->orderBy("l.classroom_id")
             ->get();
 
-        // LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $lessons);
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Więcej niż jedna lekcja w tej samej sali";
+        }
 
         foreach($lessons as $lesson) {
-            $problem["Błąd"] = "Więcej niż jedna lekcja w tej samej sali";
-            $problem["Dzień"] = $lesson->weekday;
-            $problem["Godzina"] = $lesson->timeslot;
-            $problem["Sala"] = $lesson->classroom;
-            $problem["Klasa"] = $lesson->cohort;
-            $problem["Przedmiot"] = $lesson->subject;
-            $problem["Nauczyciel"] = $lesson->teacher;
+            $problemDetail["weekday"] = $lesson->weekday;
+            $problemDetail["timeslot"] = $lesson->timeslot;
+            $problemDetail["classroom"] = $lesson->classroom;
+            $problemDetail["cohort"] = $lesson->cohort;
+            $problemDetail["subject"] = $lesson->subject;
+            $problemDetail["teacher"] = $lesson->teacher;
 
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
             $problems[] = $problem;
         }
 
@@ -185,15 +198,22 @@ class JobVerifyPlan implements ShouldQueue
             ->orderBy("l.timeslot_id")
             ->get();
 
-        foreach($lessons as $lesson) {
-            $problem["Błąd"] = "Klasa ma więcej lekcji w tym samym czasie";
-            $problem["Dzień"] = $lesson->weekday;
-            $problem["Godzina"] = $lesson->timeslot;
-            $problem["Sala"] = $lesson->classroom;
-            $problem["Klasa"] = $lesson->cohort;
-            $problem["Przedmiot"] = $lesson->subject;
-            $problem["Nauczyciel"] = $lesson->teacher;
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Klasa ma więcej lekcji w tym samym czasie";
+        }
 
+        foreach($lessons as $lesson) {
+            $problemDetail["weekday"] = $lesson->weekday;
+            $problemDetail["timeslot"] = $lesson->timeslot;
+            $problemDetail["classroom"] = $lesson->classroom;
+            $problemDetail["cohort"] = $lesson->cohort;
+            $problemDetail["subject"] = $lesson->subject;
+            $problemDetail["teacher"] = $lesson->teacher;
+
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
             $problems[] = $problem;
         }
 
@@ -225,15 +245,22 @@ class JobVerifyPlan implements ShouldQueue
             ->orderBy("l.timeslot_id")
             ->get();
 
-        foreach($lessons as $lesson) {
-            $problem["Błąd"] = "Nauczyciel ma więcej lekcji w tym samym czasie";
-            $problem["Dzień"] = $lesson->weekday;
-            $problem["Godzina"] = $lesson->timeslot;
-            $problem["Sala"] = $lesson->classroom;
-            $problem["Klasa"] = $lesson->cohort;
-            $problem["Przedmiot"] = $lesson->subject;
-            $problem["Nauczyciel"] = $lesson->teacher;
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Nauczyciel ma więcej lekcji w tym samym czasie";
+        }
 
+        foreach($lessons as $lesson) {
+            $problemDetail["weekday"] = $lesson->weekday;
+            $problemDetail["timeslot"] = $lesson->timeslot;
+            $problemDetail["classroom"] = $lesson->classroom;
+            $problemDetail["cohort"] = $lesson->cohort;
+            $problemDetail["subject"] = $lesson->subject;
+            $problemDetail["teacher"] = $lesson->teacher;
+
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
             $problems[] = $problem;
         }
 
@@ -266,19 +293,26 @@ class JobVerifyPlan implements ShouldQueue
                     ->whereColumn('lx.cohort_id', 'l1.cohort_id')
                     ->whereColumn('tx.order', 'ts_missing.order');
             })
-            ->select('weekdays.name as weekday', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"), 'ts_missing.start as missing_timeslot_start')
+            ->select('weekdays.name as weekday', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"), 'ts_missing.start as missing_timeslot')
             ->groupBy('weekdays.name', 'cohort', 'ts_missing.id', 'ts_missing.start', 'ts_missing.order')
             ->orderBy('l1.weekday_id')
             ->orderBy('l1.cohort_id')
             ->orderBy('ts_missing.order')
             ->get();
 
-        foreach($lessons as $lesson) {
-            $problem["Błąd"] = "Okienka pomiędzy lekcjami";
-            $problem["Dzień"] = $lesson->weekday;
-            $problem["Godzina"] = $lesson->missing_timeslot_start;
-            $problem["Klasa"] = $lesson->cohort;
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Okienka pomiędzy lekcjami";
+        }
 
+        foreach($lessons as $lesson) {
+            $problemDetail["weekday"] = $lesson->weekday;
+            $problemDetail["timeslot"] = $lesson->missing_timeslot;
+            $problemDetail["cohort"] = $lesson->cohort;
+
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
             $problems[] = $problem;
         }
 
@@ -319,17 +353,22 @@ class JobVerifyPlan implements ShouldQueue
             )
             ->get();
 
-        // LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n count: " . $lessons->count());
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Lekcje profilowe w nie swoich salach";
+        }
 
         foreach($lessons as $lesson) {
-            $problem["Błąd"] = "Lekcje profilowe w nie swoich salach";
-            $problem["Dzień"] = $lesson->weekday;
-            $problem["Godzina"] = $lesson->timeslot;
-            $problem["Klasa"] = $lesson->cohort;
-            $problem["Przedmiot"] = $lesson->subject;
-            $problem["Sala wymagana"] = $lesson->required_classroom;
-            $problem["Sala w planie"] = $lesson->plan_classroom;
+            $problemDetail["weekday"] = $lesson->weekday;
+            $problemDetail["timeslot"] = $lesson->timeslot;
+            $problemDetail["cohort"] = $lesson->cohort;
+            $problemDetail["subject"] = $lesson->subject;
+            $problemDetail["required_classroom"] = $lesson->required_classroom;
+            $problemDetail["plan_classroom"] = $lesson->plan_classroom;
 
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
             $problems[] = $problem;
         }
 
@@ -352,15 +391,103 @@ class JobVerifyPlan implements ShouldQueue
             )
             ->get();
 
-        LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n sql: " . $lessons);
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Przekroczona liczba lekcji jednego przedmiotu w ciągu dnia";
+        }
 
         foreach($lessons as $lesson) {
-            $problem["Błąd"] = "Przekroczona liczba lekcji jednego przedmiotu w ciągu dnia";
-            $problem["Dzień"] = $lesson->weekday;
-            $problem["Klasa"] = $lesson->cohort;
-            $problem["Przedmiot"] = $lesson->subject;
-            $problem["Liczba"] = $lesson->counter;
+            $problemDetail["weekday"] = $lesson->weekday;
+            $problemDetail["cohort"] = $lesson->cohort;
+            $problemDetail["subject"] = $lesson->subject;
+            $problemDetail["counter"] = $lesson->counter;
 
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
+            $problems[] = $problem;
+        }
+
+        return $problems;
+    }
+
+    private static function sameLessonsGaps($problems, $plan): array {
+
+        $lessons = DB::table('lessons as l1')
+            ->join('timeslots as t1', 't1.id', '=','l1.timeslot_id')
+            ->join('weekdays', 'weekdays.id', '=','l1.weekday_id')
+            ->join('cohorts', 'cohorts.id', '=','l1.cohort_id')
+            ->join('subjects', 'subjects.id', '=','l1.subject_id')
+            ->where('l1.plan_id', $plan->id)
+            ->select(
+                'l1.weekday_id', 
+                'weekdays.name as weekday', 
+                'l1.cohort_id', 
+                DB::raw("CONCAT(cohorts.level, cohorts.line) as cohort"),
+                'l1.subject_id', 
+                'subjects.name as subject',
+                'l1.id as lesson_id', 
+                'l1.timeslot_id', 
+                't1.start as timeslot', 
+                't1.order as timeslot_order')
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->weekday_id . '-' . $item->cohort_id . '-' . $item->subject_id;
+            })
+            ->flatMap(function ($group) {
+                $sorted = collect($group)->sortBy('timeslot_order')->values();
+                $results = [];
+
+                for ($i = 0; $i < $sorted->count(); $i++) {
+                    for ($j = $i + 1; $j < $sorted->count(); $j++) {
+                        $diff = abs($sorted[$i]->timeslot_order - $sorted[$j]->timeslot_order);
+                        if ($diff > 1) {
+                            $results[] = [
+                                'weekday_id'     => $sorted[$i]->weekday_id,
+                                'weekday'        => $sorted[$i]->weekday,
+                                'cohort_id'      => $sorted[$i]->cohort_id,
+                                'cohort'         => $sorted[$i]->cohort,
+                                'subject_id'     => $sorted[$i]->subject_id,
+                                'subject'        => $sorted[$i]->subject,
+                                'lesson_id'      => $sorted[$i]->lesson_id,
+                                'timeslot_id'    => $sorted[$i]->timeslot_id,
+                                'timeslot'       => $sorted[$i]->timeslot,
+                            ];
+                            $results[] = [
+                                'weekday_id'     => $sorted[$j]->weekday_id,
+                                'weekday'        => $sorted[$i]->weekday,
+                                'cohort_id'      => $sorted[$j]->cohort_id,
+                                'cohort'         => $sorted[$i]->cohort,
+                                'subject_id'     => $sorted[$j]->subject_id,
+                                'subject'        => $sorted[$i]->subject,
+                                'lesson_id'      => $sorted[$j]->lesson_id,
+                                'timeslot_id'    => $sorted[$j]->timeslot_id,
+                                'timeslot'       => $sorted[$j]->timeslot,
+                            ];
+                            break 2; // tylko pierwsza para z odstępem > 1
+                        }
+                    }
+                }
+
+                return $results;
+            })
+            ->values();
+
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Dwie lekcje tego samego przedmiotu nie bezpośrednio po sobie";
+        }
+
+        foreach($lessons as $lesson) {
+            // $problemItem["Błąd"] = "Dwie lekcje tego samego przedmiotu nie bezpośrednio po sobie";
+            $problemDetail["weekday"] = $lesson['weekday'];
+            $problemDetail["cohort"] = $lesson['cohort'];
+            $problemDetail["subject"] = $lesson['subject'];
+            $problemDetail["timeslot"] = $lesson['timeslot'];
+
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
             $problems[] = $problem;
         }
 
