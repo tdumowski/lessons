@@ -10,7 +10,7 @@ final readonly class TestQuery
     /** @param  array{}  $args */
     public function __invoke(null $_, array $args): bool
     {
-        $plan = Plan::find(40);
+        $plan = Plan::find(38);
 
         JobVerifyPlan::dispatch(
             plan: $plan

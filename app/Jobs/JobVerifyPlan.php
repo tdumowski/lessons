@@ -44,6 +44,7 @@ class JobVerifyPlan implements ShouldQueue
         // $problemsCritical = self::profileSubjectsClassrooms($problemsCritical, $this->plan);
         
         //TEST: max 2 lessons with one subject by day
+        // $problemsSoft = self::dailyLessonsExceeded($problemsSoft, $this->plan);
 
         //TEST: 2 lessons with one subject one by one
 
@@ -53,7 +54,7 @@ class JobVerifyPlan implements ShouldQueue
 
 
         if(count($problemsCritical) > 0) {
-            $problemsCritical = json_encode($problemsCritical, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            $problemsCritical = json_encode($problemsCritical, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $problemsCritical);
             $this->plan->test_critical = 0;
             $this->plan->test_critical_details = $problemsCritical;
@@ -64,7 +65,7 @@ class JobVerifyPlan implements ShouldQueue
         }
 
         if(count($problemsSoft) > 0) {
-            $problemsSoft = json_encode($problemsSoft, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            $problemsSoft = json_encode($problemsSoft, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $problemsSoft);
             $this->plan->test_soft = 0;
             $this->plan->test_soft_details = $problemsSoft;
@@ -328,6 +329,37 @@ class JobVerifyPlan implements ShouldQueue
             $problem["Przedmiot"] = $lesson->subject;
             $problem["Sala wymagana"] = $lesson->required_classroom;
             $problem["Sala w planie"] = $lesson->plan_classroom;
+
+            $problems[] = $problem;
+        }
+
+        return $problems;
+    }
+
+    private static function dailyLessonsExceeded($problems, $plan): array {
+        $lessons = DB::table('lessons as l')
+            ->join('weekdays', 'weekdays.id', '=', 'l.weekday_id')
+            ->join('cohorts', 'cohorts.id', '=', 'l.cohort_id')
+            ->join('subjects', 'subjects.id', '=', 'l.subject_id')
+            ->groupBy("weekdays.name", "cohort", "subjects.name")
+            ->where('l.plan_id', $plan->id)
+            ->having('counter', ">", 2)
+            ->select(
+                'weekdays.name as weekday',
+                DB::raw("CONCAT(cohorts.level, cohorts.line) as cohort"),
+                'subjects.name as subject',
+                DB::raw("COUNT(subject_id) as counter")
+            )
+            ->get();
+
+        LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n sql: " . $lessons);
+
+        foreach($lessons as $lesson) {
+            $problem["Błąd"] = "Przekroczona liczba lekcji jednego przedmiotu w ciągu dnia";
+            $problem["Dzień"] = $lesson->weekday;
+            $problem["Klasa"] = $lesson->cohort;
+            $problem["Przedmiot"] = $lesson->subject;
+            $problem["Liczba"] = $lesson->counter;
 
             $problems[] = $problem;
         }
