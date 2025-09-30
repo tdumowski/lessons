@@ -49,7 +49,8 @@ class JobVerifyPlan implements ShouldQueue
         //TEST: 2 lessons with one subject one by one
         // $problemsSoft = self::sameLessonsGaps($problemsSoft, $this->plan);
 
-        //TEST: lessons by teachers not assigned to proper subject
+        //TEST: lessons by teachers not assigned to proper subject and class
+        // $problemsCritical = self::properSubjectTeachers($problemsCritical, $this->plan);
 
         //TEST: proper amount of lessons by subject
 
@@ -92,7 +93,7 @@ class JobVerifyPlan implements ShouldQueue
             ->leftJoin('subjects as exclusive_subjects', 'exclusive_subjects.id', '=', 'classroom_subjects.subject_id')
             ->select('weekdays.name as weekday', 'timeslots.start as timeslot', 'classrooms.name as classroom', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"),
                 'exclusive_subjects.name as exclusive_subject', 'plan_subjects.name as plan_subject')
-            ->where('lessons.plan_id', $plan->id)
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->where('classroom_subjects.exclusive', 1)
             ->whereColumn('exclusive_subjects.id', "!=", 'plan_subjects.id')
             ->whereNotNull('exclusive_subjects.id')
@@ -124,31 +125,31 @@ class JobVerifyPlan implements ShouldQueue
 
         //more lessons in the same classroom
         $lessons = DB
-            ::table('lessons as l')
-            ->leftJoin('weekdays', 'weekdays.id', '=', 'l.weekday_id')
-            ->leftJoin('timeslots', 'timeslots.id', '=', 'l.timeslot_id')
-            ->leftJoin('classrooms', 'classrooms.id', '=', 'l.classroom_id')
-            ->leftJoin('cohorts', 'cohorts.id', '=', 'l.cohort_id')
-            ->leftJoin('teachers', 'teachers.id', '=', 'l.teacher_id')
-            ->leftJoin('subjects', 'subjects.id', '=', 'l.subject_id')
+            ::table('lessons')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'lessons.weekday_id')
+            ->leftJoin('timeslots', 'timeslots.id', '=', 'lessons.timeslot_id')
+            ->leftJoin('classrooms', 'classrooms.id', '=', 'lessons.classroom_id')
+            ->leftJoin('cohorts', 'cohorts.id', '=', 'lessons.cohort_id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'lessons.teacher_id')
+            ->leftJoin('subjects', 'subjects.id', '=', 'lessons.subject_id')
             ->select('weekdays.name as weekday', 'timeslots.start as timeslot', 'classrooms.name as classroom', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"),
-                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, teachers.last_name) AS teacher"))
-            ->where('plan_id', $plan->id)
+                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, ' ', teachers.last_name) AS teacher"))
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->where(function ($query) {
                 // duplikat w plan_id + weekday_id
                 $query->whereExists(function ($q) {
                     $q->select(DB::raw(1))
-                    ->from('lessons as x')
-                    ->whereRaw('x.id <> l.id')
-                    ->whereColumn('x.plan_id', 'l.plan_id')
-                    ->whereColumn('x.weekday_id', 'l.weekday_id')
-                    ->whereColumn('x.timeslot_id', 'l.timeslot_id')
-                    ->whereColumn('x.classroom_id', 'l.classroom_id');
+                    ->from('lessons as lessons2')
+                    ->whereRaw('lessons2.id <> lessons.id')
+                    ->whereColumn('lessons2.plan_id', 'lessons.plan_id')
+                    ->whereColumn('lessons2.weekday_id', 'lessons.weekday_id')
+                    ->whereColumn('lessons2.timeslot_id', 'lessons.timeslot_id')
+                    ->whereColumn('lessons2.classroom_id', 'lessons.classroom_id');
                 });
             })
-            ->orderBy("l.weekday_id")
-            ->orderBy("l.timeslot_id")
-            ->orderBy("l.classroom_id")
+            ->orderBy("lessons.weekday_id")
+            ->orderBy("lessons.timeslot_id")
+            ->orderBy("lessons.classroom_id")
             ->get();
 
         if($lessons->count()) {
@@ -172,30 +173,30 @@ class JobVerifyPlan implements ShouldQueue
 
         //more lessons of one cohort in the same timeslots
         $lessons = DB
-            ::table('lessons as l')
-            ->leftJoin('weekdays', 'weekdays.id', '=', 'l.weekday_id')
-            ->leftJoin('timeslots', 'timeslots.id', '=', 'l.timeslot_id')
-            ->leftJoin('classrooms', 'classrooms.id', '=', 'l.classroom_id')
-            ->leftJoin('cohorts', 'cohorts.id', '=', 'l.cohort_id')
-            ->leftJoin('teachers', 'teachers.id', '=', 'l.teacher_id')
-            ->leftJoin('subjects', 'subjects.id', '=', 'l.subject_id')
+            ::table('lessons')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'lessons.weekday_id')
+            ->leftJoin('timeslots', 'timeslots.id', '=', 'lessons.timeslot_id')
+            ->leftJoin('classrooms', 'classrooms.id', '=', 'lessons.classroom_id')
+            ->leftJoin('cohorts', 'cohorts.id', '=', 'lessons.cohort_id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'lessons.teacher_id')
+            ->leftJoin('subjects', 'subjects.id', '=', 'lessons.subject_id')
             ->select('weekdays.name as weekday', 'timeslots.start as timeslot', 'classrooms.name as classroom', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"),
-                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, teachers.last_name) AS teacher"))
-            ->where('plan_id', $plan->id)
+                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, ' ', teachers.last_name) AS teacher"))
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->where(function ($query) {
                 // duplikat w plan_id + weekday_id
                 $query->whereExists(function ($q) {
                     $q->select(DB::raw(1))
-                    ->from('lessons as x')
-                    ->whereRaw('x.id <> l.id')
-                    ->whereColumn('x.plan_id', 'l.plan_id')
-                    ->whereColumn('x.weekday_id', 'l.weekday_id')
-                    ->whereColumn('x.timeslot_id', 'l.timeslot_id')
-                    ->whereColumn('x.cohort_id', 'l.cohort_id');
+                    ->from('lessons as lessons2')
+                    ->whereRaw('lessons2.id <> lessons.id')
+                    ->whereColumn('lessons2.plan_id', 'lessons.plan_id')
+                    ->whereColumn('lessons2.weekday_id', 'lessons.weekday_id')
+                    ->whereColumn('lessons2.timeslot_id', 'lessons.timeslot_id')
+                    ->whereColumn('lessons2.cohort_id', 'lessons.cohort_id');
                 });
             })
-            ->orderBy("l.weekday_id")
-            ->orderBy("l.timeslot_id")
+            ->orderBy("lessons.weekday_id")
+            ->orderBy("lessons.timeslot_id")
             ->get();
 
         if($lessons->count()) {
@@ -219,30 +220,30 @@ class JobVerifyPlan implements ShouldQueue
 
         //teachers in more than one timeslots
         $lessons = DB
-            ::table('lessons as l')
-            ->leftJoin('weekdays', 'weekdays.id', '=', 'l.weekday_id')
-            ->leftJoin('timeslots', 'timeslots.id', '=', 'l.timeslot_id')
-            ->leftJoin('classrooms', 'classrooms.id', '=', 'l.classroom_id')
-            ->leftJoin('cohorts', 'cohorts.id', '=', 'l.cohort_id')
-            ->leftJoin('teachers', 'teachers.id', '=', 'l.teacher_id')
-            ->leftJoin('subjects', 'subjects.id', '=', 'l.subject_id')
+            ::table('lessons')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'lessons.weekday_id')
+            ->leftJoin('timeslots', 'timeslots.id', '=', 'lessons.timeslot_id')
+            ->leftJoin('classrooms', 'classrooms.id', '=', 'lessons.classroom_id')
+            ->leftJoin('cohorts', 'cohorts.id', '=', 'lessons.cohort_id')
+            ->leftJoin('teachers', 'teachers.id', '=', 'lessons.teacher_id')
+            ->leftJoin('subjects', 'subjects.id', '=', 'lessons.subject_id')
             ->select('weekdays.name as weekday', 'timeslots.start as timeslot', 'classrooms.name as classroom', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"),
-                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, teachers.last_name) AS teacher"))
-            ->where('plan_id', $plan->id)
+                'subjects.name as subject', DB::raw("CONCAT(teachers.first_name, ' ', teachers.last_name) AS teacher"))
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->where(function ($query) {
                 // duplikat w plan_id + weekday_id
                 $query->whereExists(function ($q) {
                     $q->select(DB::raw(1))
-                    ->from('lessons as x')
-                    ->whereRaw('x.id <> l.id')
-                    ->whereColumn('x.plan_id', 'l.plan_id')
-                    ->whereColumn('x.weekday_id', 'l.weekday_id')
-                    ->whereColumn('x.timeslot_id', 'l.timeslot_id')
-                    ->whereColumn('x.teacher_id', 'l.teacher_id');
+                    ->from('lessons as lessons2')
+                    ->whereRaw('lessons2.id <> lessons.id')
+                    ->whereColumn('lessons2.plan_id', 'lessons.plan_id')
+                    ->whereColumn('lessons2.weekday_id', 'lessons.weekday_id')
+                    ->whereColumn('lessons2.timeslot_id', 'lessons.timeslot_id')
+                    ->whereColumn('lessons2.teacher_id', 'lessons.teacher_id');
                 });
             })
-            ->orderBy("l.weekday_id")
-            ->orderBy("l.timeslot_id")
+            ->orderBy("lessons.weekday_id")
+            ->orderBy("lessons.timeslot_id")
             ->get();
 
         if($lessons->count()) {
@@ -268,35 +269,35 @@ class JobVerifyPlan implements ShouldQueue
     }
 
     private static function timeslotsGaps($problems, Plan $plan): array {
-        $lessons = DB::table('lessons as l1')
-            ->join('timeslots as ts1', 'ts1.id', '=', 'l1.timeslot_id')
-            ->join('weekdays', 'weekdays.id', '=', 'l1.weekday_id')
-            ->join('cohorts', 'cohorts.id', '=', 'l1.cohort_id')
-            ->join('lessons as l2', function($join) {
-                $join->on('l2.plan_id', '=', 'l1.plan_id')
-                    ->on('l2.weekday_id', '=', 'l1.weekday_id')
-                    ->on('l2.cohort_id', '=', 'l1.cohort_id');
+        $lessons = DB::table('lessons')
+            ->join('weekdays', 'weekdays.id', '=', 'lessons.weekday_id')
+            ->join('timeslots', 'timeslots.id', '=', 'lessons.timeslot_id')
+            ->join('cohorts', 'cohorts.id', '=', 'lessons.cohort_id')
+            ->join('lessons as lessons2', function($join) {
+                $join->on('lessons2.plan_id', '=', 'lessons.plan_id')
+                    ->on('lessons2.weekday_id', '=', 'lessons.weekday_id')
+                    ->on('lessons2.cohort_id', '=', 'lessons.cohort_id');
             })
-            ->join('timeslots as ts2', 'ts2.id', '=', 'l2.timeslot_id')
+            ->join('timeslots as timeslots2', 'timeslots2.id', '=', 'lessons2.timeslot_id')
             ->join('timeslots as ts_missing', function($join) {
-                $join->on('ts_missing.order', '>', 'ts1.order')
+                $join->on('ts_missing.order', '>', 'timeslots.order')
                     ->on('ts_missing.order', '<', 'ts2.order');
             })
-            ->where('l1.plan_id', $plan->id)
-            ->whereColumn('ts2.order', '>', 'ts1.order')
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
+            ->whereColumn('timeslots2.order', '>', 'timeslots.order')
             ->whereNotExists(function($query) {
                 $query->select(DB::raw(1))
-                    ->from('lessons as lx')
-                    ->join('timeslots as tx', 'tx.id', '=', 'lx.timeslot_id')
-                    ->whereColumn('lx.plan_id', 'l1.plan_id')
-                    ->whereColumn('lx.weekday_id', 'l1.weekday_id')
-                    ->whereColumn('lx.cohort_id', 'l1.cohort_id')
-                    ->whereColumn('tx.order', 'ts_missing.order');
+                    ->from('lessons as lessons3')
+                    ->join('timeslots as timeslots3', 'timeslots3.id', '=', 'lessons3.timeslot_id')
+                    ->whereColumn('lessons3.plan_id', 'lessons.plan_id')
+                    ->whereColumn('lessons3.weekday_id', 'lessons.weekday_id')
+                    ->whereColumn('lessons3.cohort_id', 'lessons.cohort_id')
+                    ->whereColumn('timeslots3.order', 'ts_missing.order');
             })
             ->select('weekdays.name as weekday', DB::raw("CONCAT(cohorts.level,cohorts.line) AS cohort"), 'ts_missing.start as missing_timeslot')
             ->groupBy('weekdays.name', 'cohort', 'ts_missing.id', 'ts_missing.start', 'ts_missing.order')
-            ->orderBy('l1.weekday_id')
-            ->orderBy('l1.cohort_id')
+            ->orderBy('lessons.weekday_id')
+            ->orderBy('lessons.cohort_id')
             ->orderBy('ts_missing.order')
             ->get();
 
@@ -320,25 +321,25 @@ class JobVerifyPlan implements ShouldQueue
     }
 
     private static function profileSubjectsClassrooms($problems, Plan $plan): array {
-        $lessons = DB::table('lessons as l')
-            ->leftJoin('weekdays', 'weekdays.id', '=', 'l.weekday_id')
-            ->join('timeslots', 'timeslots.id', '=', 'l.timeslot_id')
-            ->join('classrooms', 'classrooms.id', '=', 'l.classroom_id')
-            ->leftJoin('classroom_subjects', 'classroom_subjects.subject_id', '=', 'l.subject_id')
+        $lessons = DB::table('lessons')
+            ->leftJoin('weekdays', 'weekdays.id', '=', 'lessons.weekday_id')
+            ->join('timeslots', 'timeslots.id', '=', 'lessons.timeslot_id')
+            ->join('classrooms', 'classrooms.id', '=', 'lessons.classroom_id')
+            ->leftJoin('classroom_subjects', 'classroom_subjects.subject_id', '=', 'lessons.subject_id')
             ->leftJoin('classrooms as classrooms2', 'classrooms2.id', '=', 'classroom_subjects.classroom_id')
-            ->join('cohorts', 'cohorts.id', '=', 'l.cohort_id')
-            ->join('teachers', 'teachers.id', '=', 'l.teacher_id')
-            ->join('subjects', 'subjects.id', '=', 'l.subject_id')
-            ->where('l.plan_id', $plan->id)
+            ->join('cohorts', 'cohorts.id', '=', 'lessons.cohort_id')
+            ->join('teachers', 'teachers.id', '=', 'lessons.teacher_id')
+            ->join('subjects', 'subjects.id', '=', 'lessons.subject_id')
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->whereColumn('subjects.id', 'classroom_subjects.subject_id')
             ->whereColumn('classrooms.id', "!=", 'classrooms2.id')
             ->where(function ($query) {
                 $query->whereColumn('classrooms.id', 'classrooms2.id')
                     ->orWhereNotExists(function ($sub) {
                         $sub->select(DB::raw(1))
-                            ->from('classroom_subjects as cs2')
-                            ->whereColumn('cs2.classroom_id', 'l.classroom_id')
-                            ->whereColumn('cs2.subject_id', 'subjects.id');
+                            ->from('classroom_subjects as classroom_subjects2')
+                            ->whereColumn('classroom_subjects2.classroom_id', 'lessons.classroom_id')
+                            ->whereColumn('classroom_subjects2.subject_id', 'subjects.id');
                     });
             })
             ->select(
@@ -346,7 +347,7 @@ class JobVerifyPlan implements ShouldQueue
                 'timeslots.start as timeslot',
                 'classrooms.name as classroom',
                 DB::raw("CONCAT(cohorts.level, cohorts.line) as cohort"),
-                DB::raw("CONCAT(teachers.first_name, teachers.last_name) as teacher"),
+                DB::raw("CONCAT(teachers.first_name, ' ', teachers.last_name) as teacher"),
                 'subjects.name as subject',
                 'classrooms.name as plan_classroom',
                 'classrooms2.name as required_classroom'
@@ -375,13 +376,13 @@ class JobVerifyPlan implements ShouldQueue
         return $problems;
     }
 
-    private static function dailyLessonsExceeded($problems, $plan): array {
-        $lessons = DB::table('lessons as l')
-            ->join('weekdays', 'weekdays.id', '=', 'l.weekday_id')
-            ->join('cohorts', 'cohorts.id', '=', 'l.cohort_id')
-            ->join('subjects', 'subjects.id', '=', 'l.subject_id')
+    private static function dailyLessonsExceeded(array $problems, Plan $plan): array {
+        $lessons = DB::table('lessons')
+            ->join('weekdays', 'weekdays.id', '=', 'lessons.weekday_id')
+            ->join('cohorts', 'cohorts.id', '=', 'lessons.cohort_id')
+            ->join('subjects', 'subjects.id', '=', 'lessons.subject_id')
             ->groupBy("weekdays.name", "cohort", "subjects.name")
-            ->where('l.plan_id', $plan->id)
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->having('counter', ">", 2)
             ->select(
                 'weekdays.name as weekday',
@@ -411,25 +412,24 @@ class JobVerifyPlan implements ShouldQueue
         return $problems;
     }
 
-    private static function sameLessonsGaps($problems, $plan): array {
-
-        $lessons = DB::table('lessons as l1')
-            ->join('timeslots as t1', 't1.id', '=','l1.timeslot_id')
-            ->join('weekdays', 'weekdays.id', '=','l1.weekday_id')
-            ->join('cohorts', 'cohorts.id', '=','l1.cohort_id')
-            ->join('subjects', 'subjects.id', '=','l1.subject_id')
-            ->where('l1.plan_id', $plan->id)
+    private static function sameLessonsGaps(array $problems, Plan $plan): array {
+        $lessons = DB::table('lessons')
+            ->join('weekdays', 'weekdays.id', '=','lessons.weekday_id')
+            ->join('timeslots', 'timeslots.id', '=','lessons.timeslot_id')
+            ->join('cohorts', 'cohorts.id', '=','lessons.cohort_id')
+            ->join('subjects', 'subjects.id', '=','lessons.subject_id')
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->select(
-                'l1.weekday_id', 
+                'lessons.weekday_id', 
                 'weekdays.name as weekday', 
-                'l1.cohort_id', 
+                'lessons.cohort_id', 
                 DB::raw("CONCAT(cohorts.level, cohorts.line) as cohort"),
-                'l1.subject_id', 
+                'lessons.subject_id', 
                 'subjects.name as subject',
-                'l1.id as lesson_id', 
-                'l1.timeslot_id', 
-                't1.start as timeslot', 
-                't1.order as timeslot_order')
+                'lessons.id as lesson_id', 
+                'lessons.timeslot_id', 
+                'lessons.start as timeslot', 
+                'lessons.order as timeslot_order')
             ->get()
             ->groupBy(function ($item) {
                 return $item->weekday_id . '-' . $item->cohort_id . '-' . $item->subject_id;
@@ -478,11 +478,58 @@ class JobVerifyPlan implements ShouldQueue
         }
 
         foreach($lessons as $lesson) {
-            // $problemItem["Błąd"] = "Dwie lekcje tego samego przedmiotu nie bezpośrednio po sobie";
             $problemDetail["weekday"] = $lesson['weekday'];
             $problemDetail["cohort"] = $lesson['cohort'];
             $problemDetail["subject"] = $lesson['subject'];
             $problemDetail["timeslot"] = $lesson['timeslot'];
+
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
+            $problems[] = $problem;
+        }
+
+        return $problems;
+    }
+
+    private static function properSubjectTeachers(array $problems, Plan $plan): array {
+        $lessons = DB::table('lessons')
+            ->join('weekdays', 'weekdays.id', '=','lessons.weekday_id')
+            ->join('timeslots', 'timeslots.id', '=','lessons.timeslot_id')
+            ->join('cohorts', 'cohorts.id', '=','lessons.cohort_id')
+            ->join('teachers', 'teachers.id', '=','lessons.teacher_id')
+            ->join('subjects', 'subjects.id', '=','lessons.subject_id')
+
+            ->join("cohort_subjects", function($join){
+                $join->on("cohort_subjects.subject_id", "=", "lessons.subject_id")
+                ->on("cohort_subjects.cohort_id", "=", "lessons.cohort_id");
+            })
+
+            ->join('teachers as teachers2', 'teachers2.id', '=','cohort_subjects.teacher_id')
+            ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
+            ->whereColumn('lessons.teacher_id', "!=", 'cohort_subjects.teacher_id')
+            ->select(
+                'weekdays.name as weekday', 
+                'timeslots.start as timeslot', 
+                DB::raw("CONCAT(cohorts.level, cohorts.line) as cohort"),
+                'subjects.name as subject',
+                DB::raw("CONCAT(teachers.first_name, ' ', teachers.last_name) as plan_teacher"),
+                DB::raw("CONCAT(teachers2.first_name, ' ', teachers2.last_name) as required_teacher"),
+            )
+            ->get();
+
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Lekcje zaplanowane dla innych nauczycieli niz przypisani dla danej klasy";
+        }
+
+        foreach($lessons as $lesson) {
+            $problemDetail["weekday"] = $lesson->weekday;
+            $problemDetail["timeslot"] = $lesson->timeslot;
+            $problemDetail["cohort"] = $lesson->cohort;
+            $problemDetail["subject"] = $lesson->subject;
+            $problemDetail["plan_teacher"] = $lesson->plan_teacher;
+            $problemDetail["required_teacher"] = $lesson->required_teacher;
 
             $problem["details"][] = $problemDetail;
         }
