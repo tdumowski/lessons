@@ -32,27 +32,28 @@ class JobVerifyPlan implements ShouldQueue
         $problemsSoft = [];
 
         //TEST: exclusive ClassroomSubjects
-        // $problemsCritical = self::exclusiveClassroomSubjects($problemsCritical, $this->plan);
+        $problemsCritical = self::exclusiveClassroomSubjects($problemsCritical, $this->plan);
 
         //TEST: timeslots gaps
-        // $problemsSoft = self::timeslotsGaps($problemsSoft, $this->plan);
+        $problemsSoft = self::timeslotsGaps($problemsSoft, $this->plan);
 
-        //TEST: duplicates
-        // $problemsCritical = self::duplicates($problemsCritical, $this->plan);
+        //TEST: duplicates (more than one cohort/classroom/teacher in the same timeslot)
+        $problemsCritical = self::duplicates($problemsCritical, $this->plan);
 
         //TEST: profile subjects in their classrooms only
-        // $problemsCritical = self::profileSubjectsClassrooms($problemsCritical, $this->plan);
+        $problemsCritical = self::profileSubjectsClassrooms($problemsCritical, $this->plan);
         
         //TEST: max 2 lessons with one subject by day
-        // $problemsSoft = self::dailyLessonsExceeded($problemsSoft, $this->plan);
+        $problemsSoft = self::dailyLessonsExceeded($problemsSoft, $this->plan);
 
         //TEST: 2 lessons with one subject one by one
-        // $problemsSoft = self::sameLessonsGaps($problemsSoft, $this->plan);
+        $problemsSoft = self::sameLessonsGaps($problemsSoft, $this->plan);
 
         //TEST: lessons by teachers not assigned to proper subject and class
-        // $problemsCritical = self::properSubjectTeachers($problemsCritical, $this->plan);
+        $problemsCritical = self::properSubjectTeachers($problemsCritical, $this->plan);
 
         //TEST: proper amount of lessons by subject
+        $problemsCritical = self::amountOfSubjectLessons($problemsCritical, $this->plan);
 
 
         if(count($problemsCritical) > 0) {
@@ -281,7 +282,7 @@ class JobVerifyPlan implements ShouldQueue
             ->join('timeslots as timeslots2', 'timeslots2.id', '=', 'lessons2.timeslot_id')
             ->join('timeslots as ts_missing', function($join) {
                 $join->on('ts_missing.order', '>', 'timeslots.order')
-                    ->on('ts_missing.order', '<', 'ts2.order');
+                    ->on('ts_missing.order', '<', 'timeslots2.order');
             })
             ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->whereColumn('timeslots2.order', '>', 'timeslots.order')
@@ -428,8 +429,8 @@ class JobVerifyPlan implements ShouldQueue
                 'subjects.name as subject',
                 'lessons.id as lesson_id', 
                 'lessons.timeslot_id', 
-                'lessons.start as timeslot', 
-                'lessons.order as timeslot_order')
+                'timeslots.start as timeslot', 
+                'timeslots.order as timeslot_order')
             ->get()
             ->groupBy(function ($item) {
                 return $item->weekday_id . '-' . $item->cohort_id . '-' . $item->subject_id;
@@ -500,12 +501,10 @@ class JobVerifyPlan implements ShouldQueue
             ->join('cohorts', 'cohorts.id', '=','lessons.cohort_id')
             ->join('teachers', 'teachers.id', '=','lessons.teacher_id')
             ->join('subjects', 'subjects.id', '=','lessons.subject_id')
-
             ->join("cohort_subjects", function($join){
                 $join->on("cohort_subjects.subject_id", "=", "lessons.subject_id")
                 ->on("cohort_subjects.cohort_id", "=", "lessons.cohort_id");
             })
-
             ->join('teachers as teachers2', 'teachers2.id', '=','cohort_subjects.teacher_id')
             ->where([["lessons.status", "ACTIVE"], ['lessons.plan_id', $plan->id]])
             ->whereColumn('lessons.teacher_id', "!=", 'cohort_subjects.teacher_id')
@@ -520,7 +519,7 @@ class JobVerifyPlan implements ShouldQueue
             ->get();
 
         if($lessons->count()) {
-            $problem["Problem_type"] = "Lekcje zaplanowane dla innych nauczycieli niz przypisani dla danej klasy";
+            $problem["Problem_type"] = "Lekcje zaplanowane dla innych nauczycieli niż przypisani dla danej klasy";
         }
 
         foreach($lessons as $lesson) {
@@ -530,6 +529,51 @@ class JobVerifyPlan implements ShouldQueue
             $problemDetail["subject"] = $lesson->subject;
             $problemDetail["plan_teacher"] = $lesson->plan_teacher;
             $problemDetail["required_teacher"] = $lesson->required_teacher;
+
+            $problem["details"][] = $problemDetail;
+        }
+
+        if(isset($problem)) {
+            $problems[] = $problem;
+        }
+
+        return $problems;
+    }
+
+    private static function amountOfSubjectLessons(array $problems, Plan $plan): array {
+        $lessons = DB::table('lessons')
+            ->selectRaw("CONCAT(cohorts.level, cohorts.line) AS cohort")
+            ->addSelect('subjects.name as subject')
+            ->addSelect(DB::raw('COUNT(lessons.subject_id) as plan_sum'))
+            ->addSelect('cohort_subjects.amount as required_sum')
+            ->join('cohorts', 'cohorts.id', '=', 'lessons.cohort_id')
+            ->join('subjects', 'subjects.id', '=', 'lessons.subject_id')
+            ->join('cohort_subjects', function ($join) {
+                $join->on('cohort_subjects.subject_id', '=', 'lessons.subject_id')
+                    ->on('cohort_subjects.cohort_id', '=', 'lessons.cohort_id');
+            })
+            ->where('lessons.status', 'ACTIVE')
+            ->where('lessons.plan_id', 38)
+            ->groupBy(
+                'lessons.cohort_id',
+                'lessons.subject_id',
+                'cohorts.level',
+                'cohorts.line',
+                'subjects.name',
+                'cohort_subjects.amount'
+            )
+            ->havingRaw('COUNT(lessons.subject_id) != cohort_subjects.amount')
+            ->get();
+
+        if($lessons->count()) {
+            $problem["Problem_type"] = "Liczba lekcji niezgodna z przedmiotami przypisanymi do danej klasy";
+        }
+
+        foreach($lessons as $lesson) {
+            $problemDetail["cohort"] = $lesson->cohort;
+            $problemDetail["subject"] = $lesson->subject;
+            $problemDetail["plan_sum"] = $lesson->plan_sum;
+            $problemDetail["required_sum"] = $lesson->required_sum;
 
             $problem["details"][] = $problemDetail;
         }
