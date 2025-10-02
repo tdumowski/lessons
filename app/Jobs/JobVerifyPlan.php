@@ -3,24 +3,28 @@
 namespace App\Jobs;
 
 use App\Models\Lesson;
-use App\Models\LogRepository;
-use App\Models\Plan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use App\Models\LogRepository;
+use App\Models\MailRepository;
+use App\Models\Plan;
+use App\Models\User;
 
 class JobVerifyPlan implements ShouldQueue
 {
     use Queueable;
 
     public Plan $plan;
+    public User $user;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(Plan $plan)
+    public function __construct(Plan $plan, User $user)
     {
         $this->plan = $plan;
+        $this->user = $user;
     }
 
     /**
@@ -55,7 +59,6 @@ class JobVerifyPlan implements ShouldQueue
         //TEST: proper amount of lessons by subject
         $problemsCritical = self::amountOfSubjectLessons($problemsCritical, $this->plan);
 
-
         if(count($problemsCritical) > 0) {
             $problemsCritical = json_encode($problemsCritical, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
             LogRepository::saveLogFile("log", "INFO (Job JobVerifyPlan): \n " . $problemsCritical);
@@ -78,8 +81,10 @@ class JobVerifyPlan implements ShouldQueue
             $this->plan->test_soft_details = null;
         }
 
-        $this->plan->save();
-
+        if($this->plan->save()) {
+            //LOG
+             MailRepository::mailPlanCreated($this->user);
+        }
     }
 
     private static function exclusiveClassroomSubjects(array $problems, Plan $plan): array {
@@ -123,7 +128,6 @@ class JobVerifyPlan implements ShouldQueue
     }
 
     private static function duplicates(array $problems, Plan $plan): array {
-
         //more lessons in the same classroom
         $lessons = DB
             ::table('lessons')

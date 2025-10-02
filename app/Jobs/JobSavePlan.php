@@ -2,15 +2,15 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Queue\Queueable;
 use App\Models\Lesson;
 use App\Models\LogRepository;
 use App\Models\Plan;
 use App\Models\School;
 use App\Models\Season;
 use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Queue\Queueable;
 
 class JobSavePlan implements ShouldQueue
 {
@@ -86,7 +86,8 @@ class JobSavePlan implements ShouldQueue
 
         //trigger job to verify the data
         JobVerifyPlan::dispatch(
-            plan: $plan
+            plan: $plan,
+            user: $this->user
         );
     }
 }

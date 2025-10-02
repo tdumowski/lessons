@@ -69,8 +69,6 @@ document.addEventListener('DOMContentLoaded', function () {
          }
       } 
       catch (error) {
-         
-
          $(document).Toasts('create', {
             title: 'BŁĄD generowania nowego planu',
             body: 'Spróbuj ponownie lub skontaktuj się z adminem',

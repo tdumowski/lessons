@@ -26,7 +26,8 @@ final readonly class CreatePlan
             return;
         }
 
-        $cohortIds = [1];
+        $cohortIds = [1,2,3,4];
+        // $cohortIds = [1];
 
         // $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->get();
         $cohorts = Cohort::where("status", "ACTIVE")->where("season_id", $season->id)->whereIn("id", $cohortIds)->get();
@@ -36,10 +37,13 @@ final readonly class CreatePlan
         }
 
         $initialPrompt = PromptRepository::getPrompt_1_Initial();
+        LogRepository::saveLogFile("chat", "INITIAL PROMPT:\n".$initialPrompt);
 
         $generalDatasetsPrompt = PromptRepository::getPrompt_2_GeneralDatasets();
+        LogRepository::saveLogFile("chat", "DATASETS PROMPT:\n".$generalDatasetsPrompt);
 
         $rulesPrompt = PromptRepository::getPrompt_3_Rules();
+        LogRepository::saveLogFile("chat", "RULES PROMPT:\n".$rulesPrompt);
 
         LogRepository::saveLogFile("log", "INFO (Mutation CreatePlan): first job triggered");
 

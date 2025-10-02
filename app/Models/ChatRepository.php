@@ -11,7 +11,7 @@ define('BASEURL', 'https://generativelanguage.googleapis.com/v1');
 
 //DEEPSEEK
 // define('API_KEY', env("CHAT_API_KEY_DEEPSEEK")); // 🔐 Wklej swój klucz
-// define('MODEL', 'deepseek-chat'); // lub 'deepseek-reasoner'
+// define('MODEL', 'deepseek-chat'); // lub 'deepseek-reasoner' | deepseek-chat
 // define('BASEURL', 'https://api.deepseek.com');
 
 //ANTHROPIC CLAUDE
@@ -23,7 +23,7 @@ define('BASEURL', 'https://generativelanguage.googleapis.com/v1');
 define('MAX_TOKENS', 1024); // Maksymalna liczba tokenów
 define('CACHE_DIR', '/tmp/cache/'); // 📂 Katalog do przechowywania cache
 define('CACHE_TTL', 3600); // 🕒 Czas życia cache w sekundach (np. 1 godzina)
-define('TEMPERATURE', 0.7); // 🌡️ Domyślna temperatura odpowiedzi (0.0–2.0)
+define('TEMPERATURE', 0.2); // 🌡️ Domyślna temperatura odpowiedzi (0.0–2.0)
 
 class ChatRepository extends Model
 {
